@@ -1,1 +1,1 @@
-web: gunicorn farmacia.wsgi
+web: gunicorn farmacia.wsgi:application
