@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def home(request):
-    return HttpResponse("Sistema de Gestão da Farmácia Lalysalma – Online")
+    return render(request, 'home.html')
