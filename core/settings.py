@@ -60,3 +60,17 @@ LANGUAGE_CODE = 'pt-pt'
 TIME_ZONE = 'Africa/Maputo'
 
 STATIC_URL = '/static/'
+
+import os
+
+if os.environ.get("RENDER") == "true":
+    from django.contrib.auth.models import User
+    try:
+        User.objects.get(username="admin")
+    except User.DoesNotExist:
+        User.objects.create_superuser(
+            username="admin",
+            email="farmacialalysalma01@gmail.com",
+            password="Admin@123"
+        )
+
