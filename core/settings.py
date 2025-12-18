@@ -54,13 +54,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-LANGUAGE_CODE = 'pt-pt'
-
-TIME_ZONE = 'Africa/Maputo'
-
-STATIC_URL = '/static/'
-
 import os
 
 if os.environ.get("RENDER") == "true":
@@ -73,4 +66,10 @@ if os.environ.get("RENDER") == "true":
             email="farmacialalysalma01@gmail.com",
             password="Admin@123"
         )
+LANGUAGE_CODE = 'pt-pt'
+
+TIME_ZONE = 'Africa/Maputo'
+
+STATIC_URL = '/static/'
+
 
