@@ -1,8 +1,7 @@
 from django.contrib import admin
-from django.urls import path
-from farmacia.views import home
+from django.urls import path, include
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', include('farmacia.urls')),
     path('admin/', admin.site.urls),
 ]
