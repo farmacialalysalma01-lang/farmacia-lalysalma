@@ -54,7 +54,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-import os
 
 if os.environ.get("RENDER") == "true":
     from django.contrib.auth.models import User
@@ -65,7 +64,7 @@ if os.environ.get("RENDER") == "true":
             username="admin",
             email="farmacialalysalma01@gmail.com",
             password="Admin@123"
-        )
+        
 LANGUAGE_CODE = 'pt-pt'
 
 TIME_ZONE = 'Africa/Maputo'
