@@ -8,7 +8,7 @@ SECRET_KEY = 'change-me'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-INSTALLED_APPS = [
+INSTALLED_APPS = ['farmacia',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -27,7 +27,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
-ROOT_URLCONF = 'farmacia.urls'
+ROOT_URLCONF = 'core.urls'
+
 
 TEMPLATES = [
     from pathlib import Path
@@ -51,7 +52,8 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'farmacia.wsgi.application'
+WSGI_APPLICATION = core.wsgi.application'
+
 
 DATABASES = {
     'default': dj_database_url.config(default=f"sqlite:///{BASE_DIR/'db.sqlite3'}")
