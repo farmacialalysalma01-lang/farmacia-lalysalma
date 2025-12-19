@@ -6,4 +6,4 @@ urlpatterns = [
     path('', home, name='home'),
     path('criar-admin/', criar_admin),
     path('executar-migracoes/', executar_migracoes),
-]
+
