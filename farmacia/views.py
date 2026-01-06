@@ -1,4 +1,4 @@
 from django.http import HttpResponse
 
 def home(request):
-    return HttpResponse("FUNCIONA – Farmácia Lalysalma")
+    return HttpResponse("Sistema de Gestão da Farmácia Lalysalma – Online")
