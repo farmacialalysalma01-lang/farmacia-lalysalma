@@ -17,6 +17,7 @@ class MedicamentoAdmin(admin.ModelAdmin):
         "stock_minimo",
         "preco_venda",
         "data_validade",
+        "status_stock",
     )
 
     list_filter = ("categoria", "data_validade")
@@ -24,3 +25,9 @@ class MedicamentoAdmin(admin.ModelAdmin):
     search_fields = ("nome",)
 
     ordering = ("nome",)
+
+    def status_stock(self, obj):
+        return "⚠️ BAIXO" if obj.quantidade <= obj.stock_minimo else "OK"
+
+    status_stock.short_description = "Estado do Stock"
+
