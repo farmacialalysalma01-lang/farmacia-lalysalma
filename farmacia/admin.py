@@ -31,3 +31,9 @@ class MedicamentoAdmin(admin.ModelAdmin):
 
     status_stock.short_description = "Estado do Stock"
 
+from django.contrib import admin
+from .models import Medicamento
+
+admin.site.register(Medicamento)
+
+
