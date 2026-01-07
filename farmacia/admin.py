@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import Categoria, Medicamento
+from .models import Medicamento
 
 
-@admin.register(Categoria)
+admin.site.register(Medicamento)
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ("nome",)
     search_fields = ("nome",)
@@ -30,10 +31,4 @@ class MedicamentoAdmin(admin.ModelAdmin):
         return "⚠️ BAIXO" if obj.quantidade <= obj.stock_minimo else "OK"
 
     status_stock.short_description = "Estado do Stock"
-
-from django.contrib import admin
-from .models import Medicamento
-
-admin.site.register(Medicamento)
-
 
