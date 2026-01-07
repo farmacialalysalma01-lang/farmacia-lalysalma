@@ -12,6 +12,7 @@ from django.core.management import call_command
 def run_migrate(request):
     call_command("migrate")
     return HttpResponse("Migrações executadas com sucesso!")
+     return HttpResponse("Admin criado com sucesso!")
 
 from django.contrib.auth.models import User
 def criar_admin(request):
@@ -19,5 +20,3 @@ def criar_admin(request):
         username="admin",
         password="admin123",
         email=""
-    )
-    return HttpResponse("Admin criado com sucesso!")
