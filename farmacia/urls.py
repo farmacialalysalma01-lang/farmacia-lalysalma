@@ -1,7 +1,8 @@
-from django.urls import path
-from . import views
+from django.core.management import call_command
+from django.http import HttpResponse
 
-urlpatterns = [
-    path("", views.home, name="home"),
-    path("login/", views.login_view, name="login"),
-]
+def run_migrate(request):
+    call_command("migrate")
+    return HttpResponse("Migrações executadas com sucesso!")
+path("run-migrate/", run_migrate),
+
