@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.db import connection
 from django.contrib.auth.models import User
+from django.core.management import call_command
 
 
 # -------------- HOME ----------------
@@ -32,6 +33,7 @@ def login_view(request):
 def run_migrate(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT 1")
+        call_command("migrate")
     return HttpResponse("Migrações executadas com sucesso!")
 
 
