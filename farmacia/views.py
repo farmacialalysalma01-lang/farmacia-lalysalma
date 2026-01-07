@@ -14,7 +14,6 @@ def run_migrate(request):
     return HttpResponse("Migrações executadas com sucesso!")
 
 from django.contrib.auth.models import User
-
 def criar_admin(request):
     User.objects.create_superuser(
         username="admin",
