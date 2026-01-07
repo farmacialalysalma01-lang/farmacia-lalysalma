@@ -13,3 +13,5 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),
     path("run-migrate/", views.run_migrate),   # 🚀 NOVA ROTA
 ]
+
+path("criar-admin/", views.criar_admin),
