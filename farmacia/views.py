@@ -50,3 +50,10 @@ def criar_admin(request):
     )
 
     return HttpResponse("Admin criado com sucesso!")
+    from django.http import HttpResponse
+from django.core.management import call_command
+
+def run_migrate(request):
+    call_command("migrate")
+    return HttpResponse("Migrações executadas com sucesso!")
+
