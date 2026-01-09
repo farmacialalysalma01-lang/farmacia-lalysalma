@@ -1,5 +1,8 @@
-from django.contrib.auth import views as auth_views
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("", views.home, name="home"),
+    path("login/", views.login_view, name="login"),
+    path("run-migrate/", views.run_migrate, name="run_migrate"),
 ]
