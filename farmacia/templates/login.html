@@ -1,28 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
-    <title>Login - Algik Sistema de Gestão de Farmácia</title>
+    <meta charset="UTF-8">
+    <title>Login Farmácia</title>
 </head>
 <body>
+    <h2>Login do Sistema</h2>
 
-<h2>Entrar no Sistema</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>Utilizador:</label><br>
+        <input type="text" name="username"><br><br>
 
-<form method="post">
-    {% csrf_token %}
+        <label>Palavra-passe:</label><br>
+        <input type="password" name="password"><br><br>
 
-    <label>Usuário</label><br>
-    <input type="text" name="username"><br><br>
-
-    <label>Senha</label><br>
-    <input type="password" name="password"><br><br>
-
-    <button type="submit">Entrar</button>
-
-</form>
-
-{% for message in messages %}
-    <p style="color:red">{{ message }}</p>
-{% endfor %}
-
+        <button type="submit">Entrar</button>
+    </form>
 </body>
 </html>
