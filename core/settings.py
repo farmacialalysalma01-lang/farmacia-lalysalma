@@ -18,7 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'farmacia',
+    "farmacia.apps.FarmaciaConfig",
 ]
 
 MIDDLEWARE = [
