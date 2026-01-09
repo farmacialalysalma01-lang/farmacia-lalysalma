@@ -1,17 +1,16 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.core.management import call_command
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect
 
+def login_view(request):
+    if request.method == "POST":
+        user = authenticate(
+            request,
+            username=request.POST.get("username"),
+            password=request.POST.get("password"),
+        )
+        if user is not None:
+            login(request, user)
+            return redirect("/admin/")
+        return HttpResponse("Login inválido")
 
-def run_migrate(request):
-    if request.GET.get("key") != "farmacia2026":
-        return HttpResponse("Acesso negado", status=403)
-
-    call_command("makemigrations", "farmacia")
-    call_command("migrate")
-
-    return HttpResponse("Migrations executadas com sucesso!")
-
-
-def home(request):
-    return HttpResponse("Sistema da Farmácia Lalysalma está ativo.")
+    return render(request, "login.html")
