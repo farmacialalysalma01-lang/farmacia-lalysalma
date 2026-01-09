@@ -23,12 +23,11 @@ def login_view(request):
 
 from django.http import HttpResponse
 from django.core.management import call_command
-from django.conf import settings
 
 def run_migrate(request):
     if request.GET.get("key") != "farmacia2026":
         return HttpResponse("Acesso negado", status=403)
 
-    call_command("makemigrations", "farmacia")
+    call_comand("makemigrations","farmacia")
     call_command("migrate")
     return HttpResponse("Migrations executadas com sucesso!")
