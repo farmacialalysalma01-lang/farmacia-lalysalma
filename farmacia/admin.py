@@ -4,7 +4,7 @@ from .models import Medicamento, MovimentoStock
 
 @admin.register(Medicamento)
 class MedicamentoAdmin(admin.ModelAdmin):
-    list_display = ("nome", "preco", "quantidade", "data_criacao")
+    list_display = ("nome", "preco", "quantidade")
     search_fields = ("nome",)
 
 
