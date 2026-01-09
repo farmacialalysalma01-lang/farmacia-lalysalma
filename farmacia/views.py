@@ -27,4 +27,4 @@ def login_view(request):
 
 
 def home(request):
-    return HttpResponse("Sistema da Farmácia Lalysalma está ativo.")
+    return render(request, "home.html")
