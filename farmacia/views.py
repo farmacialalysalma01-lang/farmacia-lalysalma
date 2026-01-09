@@ -20,10 +20,6 @@ def login_view(request):
     return render(request, "login.html")
 
 
-def run_migrate(request):
-    if request.GET.get("key") != "farmacia2026":
-        return HttpResponse("Acesso negado", status=403)
-
     call_command("makemigrations")
     call_command("migrate")
 
