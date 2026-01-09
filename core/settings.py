@@ -61,3 +61,6 @@ LANGUAGE_CODE = 'pt-pt'
 TIME_ZONE = 'Africa/Maputo'
 
 STATIC_URL = '/static/'
+LOGIN_REDIRECT_URL = "/dashboard/"
+LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = "/login/"
