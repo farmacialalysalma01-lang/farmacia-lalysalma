@@ -29,7 +29,9 @@ def run_migrate(request):
     if key != "farmacia2026":
         return HttpResponse("Acesso negado", status=403)
 
-    call_command("makemigrations")
+    call_command("migrate")
+
+    return HttpResponse("Migração executada com sucesso")
     call_command("migrate")
 
     return HttpResponse("Migrações executadas com sucesso")
