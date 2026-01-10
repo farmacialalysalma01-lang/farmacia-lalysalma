@@ -126,19 +126,3 @@ LANGUAGE_CODE = "pt-pt"
 TIME_ZONE = "Africa/Maputo"
 USE_I18N = True
 USE_TZ = True
-
-# ===============================
-# Criar superutilizador no Render
-# ===============================
-import os
-
-if os.environ.get("RENDER"):
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser(
-            username="admin",
-            email="admin@farmacia.com",
-            password="admin123"
-        )
