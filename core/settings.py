@@ -2,22 +2,14 @@ from pathlib import Path
 import os
 import dj_database_url
 
-# BASE
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY
-SECRET_KEY = os.environ.get("SECRET_KEY", "troca-esta-secret-key")
+SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = False
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "farmacialalysalma.co.mz",
-    ".onrender.com",
-]
+ALLOWED_HOSTS = ["*"]
 
-# APPLICATIONS
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -43,7 +35,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "core.urls"
 
-# TEMPLATES
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -62,7 +53,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-# DATABASE (Render / PostgreSQL)
+# 🔥 POSTGRES VIA RENDER
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL"),
@@ -71,7 +62,6 @@ DATABASES = {
     )
 }
 
-# PASSWORDS
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -87,17 +77,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# LANGUAGE & TIMEZONE
 LANGUAGE_CODE = "pt-pt"
+
 TIME_ZONE = "Africa/Maputo"
+
 USE_I18N = True
 USE_TZ = True
 
-# STATIC FILES
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# DEFAULT PRIMARY KEY
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
