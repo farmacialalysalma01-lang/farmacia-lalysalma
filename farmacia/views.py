@@ -24,4 +24,12 @@ def login_view(request):
 
 @login_required
 def dashboard(request):
-    return render(request, "dashboard.html")
+    total = Medicamento.objects.count()
+    stock_baixo = Medicamento.objects.filter(quantidade__lte=5).count()
+    total_qtd = sum(m.quantidade for m in Medicamento.objects.all())
+
+    return render(request, "dashboard.html", {
+        "total": total,
+        "stock_baixo": stock_baixo,
+        "total_qtd": total_qtd
+    })
