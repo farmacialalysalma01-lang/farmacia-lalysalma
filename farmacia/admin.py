@@ -1,15 +1,15 @@
 from django.contrib import admin
-from .models import Medicamento, MovimentoStock
+from .models import Produto, EntradaStock, SaidaStock
 
+@admin.register(Produto)
+class ProdutoAdmin(admin.ModelAdmin):
+    list_display = ("nome", "codigo", "preco", "stock")
+    search_fields = ("nome", "codigo")
 
-@admin.register(Medicamento)
-class MedicamentoAdmin(admin.ModelAdmin):
-    list_display = ("nome", "preco", "quantidade", "data_criacao")
-    search_fields = ("nome",)
+@admin.register(EntradaStock)
+class EntradaAdmin(admin.ModelAdmin):
+    list_display = ("produto", "quantidade", "preco_compra", "data")
 
-
-@admin.register(MovimentoStock)
-class MovimentoStockAdmin(admin.ModelAdmin):
-    list_display = ("medicamento", "tipo", "quantidade", "data")
-    list_filter = ("tipo", "data")
-    search_fields = ("medicamento__nome",)
+@admin.register(SaidaStock)
+class SaidaAdmin(admin.ModelAdmin):
+    list_display = ("produto", "quantidade", "preco_venda", "data")
