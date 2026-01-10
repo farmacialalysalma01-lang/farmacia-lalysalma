@@ -1,19 +1,25 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.core.management import call_command
-
 
 def home(request):
     return render(request, "home.html")
 
+def login_view(request):
+    erro = ""
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-def run_migrate(request):
-    key = request.GET.get("key")
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect("dashboard")
+        else:
+            erro = "Utilizador ou palavra-passe inválidos"
 
-    if key != "farmacia2026":
-        return HttpResponse("Acesso negado", status=403)
+    return render(request, "login.html", {"erro": erro})
 
-    call_command("migrate")
-
-    return HttpResponse("Migração executada com sucesso")
+@login_required
+def dashboard(request):
+    return render(request, "dashboard.html")
