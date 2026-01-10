@@ -2,5 +2,4 @@ Django>=4.2
 gunicorn
 whitenoise
 psycopg2-binary
-reportlab
 dj-database-url
