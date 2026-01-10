@@ -8,23 +8,25 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background: linear-gradient(135deg, #0a7cff, #00c6a9);
             color: #ffffff;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+
+        header {
+            background: rgba(0,0,0,0.25);
+            padding: 20px;
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: bold;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.12);
-            padding: 40px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 800px;
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
         h1 {
@@ -34,77 +36,90 @@
 
         h2 {
             font-weight: normal;
-            margin-bottom: 30px;
-            opacity: 0.95;
+            opacity: 0.9;
         }
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
-            margin-top: 30px;
+            margin-top: 40px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.18);
-            padding: 20px;
-            border-radius: 12px;
+            background: rgba(255,255,255,0.18);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         .card h3 {
             margin-bottom: 10px;
         }
 
-        .card p {
-            font-size: 0.95em;
-            opacity: 0.9;
+        .btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 35px;
+            background: #ffffff;
+            color: #0a7cff;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
         }
 
-        .footer {
-            margin-top: 35px;
+        .btn:hover {
+            background: #e6e6e6;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 15px;
+            text-align: center;
             font-size: 0.9em;
             opacity: 0.8;
-        }
-
-        .footer strong {
-            display: block;
-            margin-top: 5px;
         }
     </style>
 </head>
 <body>
 
+<header>
+    Farmácia Lalysalma Lda
+</header>
+
 <div class="container">
-    <h1>Farmácia Lalysalma</h1>
-    <h2>Sistema de Gestão Farmacêutica</h2>
+    <h1>Sistema de Gestão Farmacêutica</h1>
+    <h2>Controlo inteligente de medicamentos e stock</h2>
 
     <div class="cards">
         <div class="card">
             <h3>💊 Medicamentos</h3>
-            <p>Registo completo de medicamentos com preços e quantidades.</p>
+            <p>Registo e gestão de todos os medicamentos da farmácia.</p>
         </div>
 
         <div class="card">
             <h3>📦 Stock</h3>
-            <p>Controlo de entradas e saídas em tempo real.</p>
+            <p>Entradas, saídas e controlo automático de quantidades.</p>
         </div>
 
         <div class="card">
             <h3>📊 Relatórios</h3>
-            <p>Visualização clara de movimentos e histórico.</p>
+            <p>Histórico completo de movimentos e vendas.</p>
         </div>
 
         <div class="card">
-            <h3>🔐 Administração</h3>
-            <p>Acesso seguro através do painel administrativo.</p>
+            <h3>🔐 Segurança</h3>
+            <p>Acesso protegido e gestão via administração.</p>
         </div>
     </div>
 
-    <div class="footer">
-        Sistema ativo e funcional
-        <strong>Farmácia Lalysalma Lda</strong>
-    </div>
+    <a class="btn" href="/admin/">Entrar no Sistema</a>
 </div>
+
+<footer>
+    Sistema ativo • Desenvolvido para a Farmácia Lalysalma
+</footer>
 
 </body>
 </html>
