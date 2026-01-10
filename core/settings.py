@@ -11,6 +11,7 @@ DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
+    "jazzmin",   # 👈 TEM DE SER O PRIMEIRO
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -90,3 +91,29 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Farmácia Lalysalma",
+    "site_header": "Farmácia Lalysalma",
+    "site_brand": "Farmácia Lalysalma",
+    "site_logo": "https://cdn-icons-png.flaticon.com/512/2966/2966484.png",
+    "welcome_sign": "Bem-vindo ao Sistema da Farmácia Lalysalma",
+    "copyright": "Aldo Culpa",
+    "search_model": ["farmacia.Produto"],
+
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Ver site", "url": "/", "new_window": True},
+    ],
+
+    "icons": {
+        "auth": "fas fa-users",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users-cog",
+        "farmacia.Produto": "fas fa-pills",
+        "farmacia.EntradaStock": "fas fa-arrow-down",
+        "farmacia.SaidaStock": "fas fa-arrow-up",
+    },
+
+    "theme": "flatly",
+}
