@@ -1,6 +1,8 @@
-from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
+# Página de login
 def login_view(request):
     if request.method == "POST":
         user = authenticate(
@@ -13,3 +15,8 @@ def login_view(request):
         else:
             return render(request, "login.html", {"error": "Login inválido"})
     return render(request, "login.html")
+
+# Página principal (HOME) protegida
+@login_required(login_url="/login/")
+def home(request):
+    return render(request, "home.html")
