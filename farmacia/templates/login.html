@@ -2,20 +2,51 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Login Farmácia</title>
+    <title>Login - Farmácia Lalysalma</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a7cff, #00c6a9);
+            font-family: Arial;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+        form {
+            background: rgba(255,255,255,0.2);
+            padding: 40px;
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: none;
+        }
+        button {
+            padding: 12px;
+            width: 100%;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+        }
+        .erro { color: yellow; }
+    </style>
 </head>
 <body>
-    <h2>Login do Sistema</h2>
 
-    <form method="post">
-        {% csrf_token %}
-        <label>Utilizador:</label><br>
-        <input type="text" name="username"><br><br>
+<form method="post">
+    {% csrf_token %}
+    <h2>Login</h2>
+    {% if erro %}<p class="erro">{{ erro }}</p>{% endif %}
+    <input name="username" placeholder="Utilizador" required>
+    <input type="password" name="password" placeholder="Palavra-passe" required>
+    <button>Entrar</button>
+</form>
 
-        <label>Palavra-passe:</label><br>
-        <input type="password" name="password"><br><br>
-
-        <button type="submit">Entrar</button>
-    </form>
 </body>
 </html>
