@@ -44,3 +44,29 @@ def dashboard(request):
         "stock_baixo": stock_baixo,
         "total_qtd": total_qtd,
     })
+
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+
+def recibo_pdf(request, venda_id):
+    venda = Venda.objects.get(id=venda_id)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="recibo_{venda_id}.pdf"'
+
+    p = canvas.Canvas(response)
+    p.drawString(100, 800, "Farmácia Lalysalma")
+    p.drawString(100, 780, f"Recibo Nº {venda.id}")
+    p.drawString(100, 760, f"Data: {venda.data.strftime('%d/%m/%Y')}")
+
+    y = 720
+    for item in venda.itens.all():
+        linha = f"{item.medicamento.nome} - {item.quantidade} x {item.preco}"
+        p.drawString(100, y, linha)
+        y -= 20
+
+    p.drawString(100, y-20, f"TOTAL: {venda.total} MZN")
+
+    p.showPage()
+    p.save()
+    return response
