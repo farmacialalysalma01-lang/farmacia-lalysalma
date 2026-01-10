@@ -1,7 +1,11 @@
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 from django.core.management import call_command
+
+
+def home(request):
+    return HttpResponse("Sistema da Farmácia Lalysalma está ativo.")
 
 
 def login_view(request):
@@ -14,16 +18,18 @@ def login_view(request):
             login(request, user)
             return redirect("/admin/")
         else:
-            return HttpResponse("Utilizador ou palavra-passe incorretos")
+            return HttpResponse("Credenciais inválidas")
 
-    return render(request, "login.html")
+    return HttpResponse("Página de login")
 
+
+def run_migrate(request):
+    key = request.GET.get("key")
+
+    if key != "farmacia2026":
+        return HttpResponse("Acesso negado", status=403)
 
     call_command("makemigrations")
     call_command("migrate")
 
     return HttpResponse("Migrações executadas com sucesso")
-
-
-def home(request):
-    return render(request, "home.html")
