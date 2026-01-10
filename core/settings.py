@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import os
 import dj_database_url
@@ -115,5 +116,16 @@ JAZZMIN_SETTINGS = {
         "farmacia.SaidaStock": "fas fa-arrow-up",
     },
 
+    "theme": "flatly",
+}
+
+# FORCE JAZZMIN
+JAZZMIN_SETTINGS = {
+    "site_title": "Farmácia Lalysalma",
+    "site_header": "Farmácia Lalysalma",
+    "site_brand": "Farmácia Lalysalma",
+    "welcome_sign": "Sistema de Gestão da Farmácia Lalysalma",
+    "site_logo": "https://cdn-icons-png.flaticon.com/512/2966/2966484.png",
+    "copyright": "Aldo Culpa",
     "theme": "flatly",
 }
