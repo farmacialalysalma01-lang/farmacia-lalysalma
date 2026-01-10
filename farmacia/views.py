@@ -1,21 +1,15 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 
-
-def home(request):
-    return render(request, "home.html")
-
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-
-def setup_admin(request):
-    if User.objects.filter(username="admin").exists():
-        return HttpResponse("Admin já existe")
-
-    User.objects.create_superuser(
-        username="admin",
-        email="admin@farmacia.com",
-        password="Admin@2026"
-    )
-    return HttpResponse("Admin criado com sucesso")
-
+def login_view(request):
+    if request.method == "POST":
+        user = authenticate(
+            username=request.POST["username"],
+            password=request.POST["password"]
+        )
+        if user:
+            login(request, user)
+            return redirect("/")
+        else:
+            return render(request, "login.html", {"error": "Login inválido"})
+    return render(request, "login.html")
