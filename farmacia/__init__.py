@@ -1,1 +1,1 @@
-default_app_config = 'farmacia.apps.FarmaciaConfig'
+default_app_config = "farmacia.apps.FarmaciaConfig"
