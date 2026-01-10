@@ -122,4 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # =========================
 # LANGUAGE & TIME
 # =========================
-LANGUAGE_CODE = "
+LANGUAGE_CODE = "pt-pt"
+TIME_ZONE = "Africa/Maputo"
+USE_I18N = True
+USE_TZ = True
