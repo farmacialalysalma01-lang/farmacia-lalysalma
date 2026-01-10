@@ -24,12 +24,23 @@ def login_view(request):
 
 @login_required
 def dashboard(request):
-    total = Medicamento.objects.count()
+    from django.contrib.auth.decorators import login_required
+
+@login_required
+def dashboard(request):
+    medicamentos = Medicamento.objects.all()
+
+    nomes = [m.nome for m in medicamentos]
+    quantidades = [m.quantidade for m in medicamentos]
+
+    total = medicamentos.count()
     stock_baixo = Medicamento.objects.filter(quantidade__lte=5).count()
-    total_qtd = sum(m.quantidade for m in Medicamento.objects.all())
+    total_qtd = sum(quantidades)
 
     return render(request, "dashboard.html", {
+        "nomes": nomes,
+        "quantidades": quantidades,
         "total": total,
         "stock_baixo": stock_baixo,
-        "total_qtd": total_qtd
+        "total_qtd": total_qtd,
     })
