@@ -70,3 +70,12 @@ def recibo_pdf(request, venda_id):
     p.showPage()
     p.save()
     return response
+
+from django.contrib.auth.decorators import user_passes_test
+
+def is_admin(user):
+    return user.groups.filter(name="Administrador").exists()
+
+@user_passes_test(is_admin)
+def dashboard(request):
+    ...
