@@ -4,7 +4,7 @@ from .models import Produto, Venda
 
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ("nome", "preco", "quantidade")
+    list_display = ("nome", "preco", "stock")
     search_fields = ("nome",)
 
 
@@ -12,4 +12,3 @@ class ProdutoAdmin(admin.ModelAdmin):
 class VendaAdmin(admin.ModelAdmin):
     list_display = ("id", "produto", "quantidade", "preco_unitario", "data")
     list_filter = ("data",)
-    search_fields = ("produto__nome",)
