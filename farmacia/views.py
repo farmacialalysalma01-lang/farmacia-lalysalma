@@ -1,18 +1,57 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Produto, Venda
 
 
-@login_required
-def home(request):
-    return render(request, "home.html")
+# ---------------- LOGIN ----------------
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+
+            # Redirecionar conforme grupo
+            if user.groups.filter(name="CAIXA").exists():
+                return redirect("/caixa/")
+            if user.groups.filter(name="GERENTE").exists():
+                return redirect("/gerente/")
+            if user.groups.filter(name="FARMACEUTICO").exists():
+                return redirect("/farmaceutico/")
+            if user.is_superuser:
+                return redirect("/admin/")
+
+        return render(request, "login.html", {"error": "Credenciais inválidas"})
+
+    return render(request, "login.html")
 
 
+def logout_view(request):
+    logout(request)
+    return redirect("/")
+
+
+# ---------------- ÁREAS ----------------
 @login_required
 def caixa(request):
     return render(request, "caixa.html")
 
 
+@login_required
+def gerente(request):
+    return render(request, "gerente.html")
+
+
+@login_required
+def farmaceutico(request):
+    return render(request, "farmaceutico.html")
+
+
+# ---------------- VENDAS ----------------
 @login_required
 def nova_venda(request):
     produtos = Produto.objects.all()
