@@ -62,4 +62,18 @@ class Venda(models.Model):
     def __str__(self):
         return f"{self.produto.nome} - {self.quantidade} unid"
 
+class Venda(models.Model):
+    data = models.DateTimeField(auto_now_add=True)
+    produto = models.ForeignKey("Produto", on_delete=models.CASCADE)
+    quantidade = models.PositiveIntegerField()
+    preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        self.total = self.quantidade * self.preco_unitario
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.produto.nome} - {self.quantidade}"
+
 
