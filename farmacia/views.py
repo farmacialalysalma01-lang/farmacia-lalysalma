@@ -53,9 +53,28 @@ def home(request):
     return render(request, "home.html")
 
 
-@login_required
+    @login_required
 def nova_venda(request):
-    return render(request, "nova_venda.html")
+    produtos = Produto.objects.all()
+
+    if request.method == "POST":
+        produto_id = request.POST["produto"]
+        quantidade = int(request.POST["quantidade"])
+
+        produto = Produto.objects.get(id=produto_id)
+
+        Venda.objects.create(
+            produto=produto,
+            quantidade=quantidade,
+            preco_unitario=produto.preco
+        )
+
+        produto.quantidade -= quantidade
+        produto.save()
+
+        return redirect("/caixa/")
+
+    return render(request, "nova_venda.html", {"produtos": produtos})
 
 
 @login_required
