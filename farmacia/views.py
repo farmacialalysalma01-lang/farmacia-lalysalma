@@ -1,16 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 
-
-def is_caixa(user):
-    return user.groups.filter(name="CAIXA").exists()
-
-def is_gerente(user):
-    return user.groups.filter(name="GERENTE").exists()
-
-def is_farmaceutico(user):
-    return user.groups.filter(name="FARMACEUTICO").exists()
 
 def login_view(request):
     if request.method == "POST":
@@ -60,33 +51,3 @@ def gerente(request):
 @login_required
 def home(request):
     return render(request, "home.html")
-
-from .models import Produto, Venda
-
-
-@login_required
-@user_passes_test(is_caixa)
-def nova_venda(request):
-    produtos = Produto.objects.all()
-
-    if request.method == "POST":
-        produto_id = request.POST.get("produto")
-        quantidade = int(request.POST.get("quantidade"))
-
-        produto = Produto.objects.get(id=produto_id)
-
-        if produto.quantidade >= quantidade:
-            total = produto.preco * quantidade
-
-            Venda.objects.create(
-                produto=produto,
-                quantidade=quantidade,
-                total=total,
-                vendedor=request.user
-            )
-
-            produto.quantidade -= quantidade
-            produto.save()
-
-    return render(request, "nova_venda.html", {"produtos": produtos})
-
