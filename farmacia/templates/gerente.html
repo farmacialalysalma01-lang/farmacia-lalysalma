@@ -1,3 +1,13 @@
-<h1>Área do Gerente</h1>
-<p>Bem-vindo {{ request.user.username }}</p>
-<a href="/admin/">Abrir Administração</a>
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Área do Gerente</h2>
+
+<ul>
+    <li><a href="#">Relatório Diário</a></li>
+    <li><a href="#">Relatório Mensal</a></li>
+    <li><a href="#">Lucros</a></li>
+    <li><a href="#">Stock</a></li>
+</ul>
+
+{% endblock %}
