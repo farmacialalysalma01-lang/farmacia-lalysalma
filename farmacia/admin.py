@@ -10,5 +10,17 @@ class ProdutoAdmin(admin.ModelAdmin):
 
 @admin.register(Venda)
 class VendaAdmin(admin.ModelAdmin):
-    list_display = ("id", "produto", "quantidade", "preco_unitario", "data")
-    list_filter = ("data",)
+    list_display = (
+        "id",
+        "produto",
+        "quantidade",
+        "preco_unitario",
+        "total",
+        "forma_pagamento",
+        "operador",
+        "data",
+    )
+
+    list_filter = ("forma_pagamento", "data")
+    search_fields = ("produto__nome", "cliente")
+
