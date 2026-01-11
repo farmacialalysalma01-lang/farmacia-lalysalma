@@ -1,3 +1,12 @@
-<h1>Área do Farmacêutico</h1>
-<p>Bem-vindo {{ request.user.username }}</p>
-<a href="/admin/">Abrir Administração</a>
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Área do Farmacêutico</h2>
+
+<ul>
+    <li><a href="#">Adicionar Medicamento</a></li>
+    <li><a href="#">Entradas</a></li>
+    <li><a href="#">Validade</a></li>
+</ul>
+
+{% endblock %}
