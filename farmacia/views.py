@@ -3,6 +3,15 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
+def is_caixa(user):
+    return user.groups.filter(name="CAIXA").exists()
+
+def is_gerente(user):
+    return user.groups.filter(name="GERENTE").exists()
+
+def is_farmaceutico(user):
+    return user.groups.filter(name="FARMACEUTICO").exists()
+
 def login_view(request):
     if request.method == "POST":
         username = request.POST["username"]
