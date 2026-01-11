@@ -51,3 +51,19 @@ def gerente(request):
 @login_required
 def home(request):
     return render(request, "home.html")
+
+
+@login_required
+def nova_venda(request):
+    return render(request, "nova_venda.html")
+
+
+@login_required
+def historico_vendas(request):
+    return render(request, "historico_vendas.html")
+
+
+@login_required
+def emitir_recibo(request):
+    return render(request, "emitir_recibo.html")
+
