@@ -1,3 +1,20 @@
 <h2>Nova Venda</h2>
-<p>Aqui o Caixa vai registrar uma nova venda.</p>
+
+<form method="post">
+  {% csrf_token %}
+
+  <label>Produto:</label><br>
+  <select name="produto">
+    {% for p in produtos %}
+      <option value="{{ p.id }}">{{ p.nome }} ({{ p.quantidade }} em stock)</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label>Quantidade:</label><br>
+  <input type="number" name="quantidade" required><br><br>
+
+  <button type="submit">Registar Venda</button>
+</form>
+
+<br>
 <a href="/caixa/">Voltar</a>
