@@ -1,3 +1,12 @@
-<h1>Área do Caixa</h1>
-<p>Bem-vindo {{ request.user.username }}</p>
-<a href="/admin/">Abrir Administração</a>
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Área do Caixa</h2>
+
+<ul>
+    <li><a href="#">Nova Venda</a></li>
+    <li><a href="#">Histórico de Vendas</a></li>
+    <li><a href="#">Emitir Recibo</a></li>
+</ul>
+
+{% endblock %}
