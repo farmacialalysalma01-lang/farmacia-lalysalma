@@ -3,6 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_protect
 
 
+# Página inicial (Home)
+def home(request):
+    return render(request, "login.html")
+
+
+# Login
 @csrf_protect
 def login_view(request):
     if request.method == "POST":
@@ -35,6 +41,7 @@ def login_view(request):
     return render(request, "login.html")
 
 
+# Logout
 def logout_view(request):
     logout(request)
     return redirect("/")
