@@ -1,15 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
 
 
-# Página inicial (Home)
-def home(request):
-    return render(request, "login.html")
-
-
-# Login
-@csrf_protect
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -19,29 +12,39 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-
-            # Redirecionamento por grupo
-            if user.groups.filter(name="CAIXA").exists():
-                return redirect("/admin/farmacia/entradastock/")
-
-            if user.groups.filter(name="FARMACEUTICO").exists():
-                return redirect("/admin/farmacia/produto/")
-
-            if user.groups.filter(name="GERENTE").exists():
-                return redirect("/admin/")
-
-            # Superuser
-            if user.is_superuser:
-                return redirect("/admin/")
-
-            return redirect("/admin/")
+            return redirect("/dashboard/")
         else:
             return render(request, "login.html", {"error": "Utilizador ou senha inválidos"})
 
     return render(request, "login.html")
 
 
-# Logout
-def logout_view(request):
-    logout(request)
-    return redirect("/")
+@login_required
+def dashboard(request):
+    user = request.user
+
+    if user.groups.filter(name="CAIXA").exists():
+        return redirect("/caixa/")
+
+    if user.groups.filter(name="FARMACEUTICO").exists():
+        return redirect("/farmaceutico/")
+
+    if user.groups.filter(name="GERENTE").exists():
+        return redirect("/gerente/")
+
+    return redirect("/admin/")
+
+
+@login_required
+def caixa(request):
+    return render(request, "caixa.html")
+
+
+@login_required
+def farmaceutico(request):
+    return render(request, "farmaceutico.html")
+
+
+@login_required
+def gerente(request):
+    return render(request, "gerente.html")
