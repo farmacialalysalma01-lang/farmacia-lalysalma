@@ -54,7 +54,14 @@ def farmaceutico(request):
 # ---------------- VENDAS ----------------
 @login_required
 def nova_venda(request):
-    produtos = Produto.objects.all()
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Produto, Venda
+from django.utils import timezone
+
+@login_required
+def nova_venda(request):
+    produtos = Produto.objects.filter(stock__gt=0)
 
     if request.method == "POST":
         produto_id = request.POST.get("produto")
@@ -62,15 +69,31 @@ def nova_venda(request):
 
         produto = Produto.objects.get(id=produto_id)
 
+        # Verificar stock
+        if quantidade > produto.stock:
+            return render(request, "nova_venda.html", {
+                "produtos": produtos,
+                "erro": "Stock insuficiente!"
+            })
+
+        # Calcular preço
+        total = quantidade * produto.preco
+
+        # Criar venda
         Venda.objects.create(
             produto=produto,
             quantidade=quantidade,
-            preco_unitario=produto.preco
+            preco_unitario=produto.preco,
+            total=total,
+            operador=request.user,
+            data=timezone.now()
         )
 
-        produto.quantidade -= quantidade
+        # Atualizar stock
+        produto.stock -= quantidade
         produto.save()
 
         return redirect("/caixa/")
 
     return render(request, "nova_venda.html", {"produtos": produtos})
+
