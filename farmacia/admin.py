@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Produto, EntradaStock, SaidaStock, Venda
+from .models import Venda
 
 
 @admin.register(Produto)
