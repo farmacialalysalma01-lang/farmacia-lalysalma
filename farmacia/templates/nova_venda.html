@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Nova Venda</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Medicamento:</label><br>
+    <select name="produto">
+        {% for p in produtos %}
+            <option value="{{ p.id }}">
+                {{ p.nome }} — {{ p.quantidade }} em stock — {{ p.preco }} MT
+            </option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Quantidade:</label><br>
+    <input type="number" name="quantidade" min="1" required><br><br>
+
+    <button type="submit">💰 Vender</button>
+</form>
+
+{% endblock %}
