@@ -45,7 +45,7 @@ def farmaceutico(request):
 
 @login_required
 def gestor(request):
-    return render(request, "gerente.html")
+    return render(request, "gestor.html")
 
 
 @login_required
