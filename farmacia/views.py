@@ -4,77 +4,65 @@ from django.contrib.auth.decorators import login_required
 from .models import Produto, Venda
 
 
-# 🔐 LOGIN
 def login_view(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(request, username=username, password=password)
-
+        user = authenticate(
+            request,
+            username=request.POST["username"],
+            password=request.POST["password"]
+        )
         if user:
             login(request, user)
-
-            if user.groups.filter(name="CAIXA").exists():
-                return redirect("caixa")
-            elif user.groups.filter(name="GERENTE").exists():
-                return redirect("gerente")
-            elif user.groups.filter(name="FARMACEUTICO").exists():
-                return redirect("farmaceutico")
-            else:
-                return redirect("admin:index")
-
-        return render(request, "login.html", {"erro": "Credenciais inválidas"})
-
+            return redirect("/caixa/")
     return render(request, "login.html")
 
 
-# 🚪 LOGOUT
 def logout_view(request):
     logout(request)
-    return redirect("login")
+    return redirect("/")
 
 
-# 🧾 CAIXA
 @login_required
 def caixa(request):
     return render(request, "caixa.html")
 
 
-# 💰 NOVA VENDA
 @login_required
 def nova_venda(request):
-    produtos = Produto.objects.filter(quantidade__gt=0)
+    produtos = Produto.objects.filter(stock__gt=0)
 
     if request.method == "POST":
-        produto_id = request.POST["produto"]
+        produto = Produto.objects.get(id=request.POST["produto"])
         quantidade = int(request.POST["quantidade"])
-        cliente = request.POST["cliente"]
-        forma_pagamento = request.POST["forma_pagamento"]
+        cliente = request.POST.get("cliente", "")
+        forma = request.POST["forma_pagamento"]
 
-        produto = Produto.objects.get(id=produto_id)
+        if quantidade > produto.stock:
+            return render(request, "nova_venda.html", {
+                "produtos": produtos,
+                "erro": "Stock insuficiente"
+            })
 
-        total = quantidade * produto.preco_venda
+        total = quantidade * produto.preco
 
         Venda.objects.create(
             produto=produto,
             quantidade=quantidade,
-            preco_unitario=produto.preco_venda,
+            preco_unitario=produto.preco,
             total=total,
             cliente=cliente,
-            forma_pagamento=forma_pagamento,
+            forma_pagamento=forma,
             operador=request.user
         )
 
-        produto.quantidade -= quantidade
+        produto.stock -= quantidade
         produto.save()
 
-        return redirect("historico_vendas")
+        return redirect("/caixa/historico/")
 
     return render(request, "nova_venda.html", {"produtos": produtos})
 
 
-# 📜 HISTÓRICO
 @login_required
 def historico_vendas(request):
     vendas = Venda.objects.all().order_by("-data")
