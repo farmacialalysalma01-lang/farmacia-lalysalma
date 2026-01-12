@@ -42,7 +42,10 @@ def area_caixa(request):
 # -------------------------
 # NOVA VENDA
 # -------------------------
-from django.utils import timezone
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Produto, Venda
+
 
 @login_required
 def nova_venda(request):
@@ -51,7 +54,7 @@ def nova_venda(request):
     if request.method == "POST":
         produto_id = request.POST.get("produto")
         quantidade = int(request.POST.get("quantidade"))
-        cliente = request.POST.get("cliente", "")
+        cliente = request.POST.get("cliente")
         forma = request.POST.get("forma_pagamento")
 
         produto = Produto.objects.get(id=produto_id)
@@ -71,8 +74,7 @@ def nova_venda(request):
             total=total,
             cliente=cliente,
             forma_pagamento=forma,
-            operador=request.user,
-            data=timezone.now()
+            operador=request.user
         )
 
         produto.stock -= quantidade
