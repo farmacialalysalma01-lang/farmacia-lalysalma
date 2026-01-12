@@ -1,71 +1,48 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Produto, Venda
 
-
-# -------------------------
-# LOGIN
-# -------------------------
+# ---------- LOGIN ----------
 def login_view(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(request, username=username, password=password)
-
+        user = authenticate(
+            request,
+            username=request.POST["username"],
+            password=request.POST["password"]
+        )
         if user:
             login(request, user)
-            return redirect("home")
+
+            if user.groups.filter(name="CAIXA").exists():
+                return redirect("caixa")
+
+            return redirect("/admin/")
         else:
-            return render(request, "login.html", {"error": "Login inválido"})
+            return render(request, "login.html", {"error": "Credenciais inválidas"})
 
     return render(request, "login.html")
 
+def logout_view(request):
+    logout(request)
+    return redirect("login")
 
-# -------------------------
-# HOME
-# -------------------------
+# ---------- CAIXA ----------
 @login_required
-def home(request):
-    return render(request, "home.html")
-
-
-# -------------------------
-# ÁREA CAIXA
-# -------------------------
-@login_required
-def area_caixa(request):
-    return render(request, "caixa.html")
-
-
-# -------------------------
-# NOVA VENDA
-# -------------------------
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Produto, Venda
-
+def caixa_dashboard(request):
+    return render(request, "caixa_dashboard.html")
 
 @login_required
 def nova_venda(request):
-    produtos = Produto.objects.filter(stock__gt=0)
+    produtos = Produto.objects.all()
 
     if request.method == "POST":
-        produto_id = request.POST.get("produto")
-        quantidade = int(request.POST.get("quantidade"))
-        cliente = request.POST.get("cliente")
-        forma = request.POST.get("forma_pagamento")
+        produto = Produto.objects.get(id=request.POST["produto"])
+        quantidade = int(request.POST["quantidade"])
+        cliente = request.POST.get("cliente", "")
+        forma = request.POST["forma"]
 
-        produto = Produto.objects.get(id=produto_id)
-
-        if quantidade > produto.stock:
-            return render(request, "nova_venda.html", {
-                "produtos": produtos,
-                "erro": "Stock insuficiente!"
-            })
-
-        total = quantidade * produto.preco
+        total = produto.preco * quantidade
 
         Venda.objects.create(
             produto=produto,
@@ -80,14 +57,16 @@ def nova_venda(request):
         produto.stock -= quantidade
         produto.save()
 
-        return redirect("/caixa/")
+        return redirect("historico_vendas")
 
     return render(request, "nova_venda.html", {"produtos": produtos})
 
+@login_required
+def historico_vendas(request):
+    vendas = Venda.objects.order_by("-data")
+    return render(request, "historico_vendas.html", {"vendas": vendas})
 
-# -------------------------
-# LOGOUT
-# -------------------------
-def sair(request):
-    logout(request)
-    return redirect("login")
+@login_required
+def emitir_recibo(request, venda_id):
+    venda = get_object_or_404(Venda, id=venda_id)
+    return render(request, "recibo.html", {"venda": venda})
