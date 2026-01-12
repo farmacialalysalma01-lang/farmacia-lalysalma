@@ -1,94 +1,103 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.contrib import messages
 from .models import Produto, Venda
-from django.utils.timezone import now
 from decimal import Decimal
 
-# ---------------------------
-# LOGIN
-# ---------------------------
+
 def login_view(request):
     if request.method == "POST":
         user = authenticate(
             request,
-            username=request.POST["username"],
-            password=request.POST["password"]
+            username=request.POST.get("username"),
+            password=request.POST.get("password")
         )
         if user:
             login(request, user)
             return redirect("/caixa/")
         else:
-            messages.error(request, "Login inválido")
+            messages.error(request, "Credenciais inválidas")
+
     return render(request, "login.html")
+
 
 def logout_view(request):
     logout(request)
     return redirect("/")
 
-# ---------------------------
-# CAIXA
-# ---------------------------
+
 @login_required
 def area_caixa(request):
-    total = Venda.objects.filter(data__date=now().date()).aggregate(
-        total=models.Sum("total")
-    )["total"] or 0
+    total = Venda.objects.aggregate(s=Sum("total"))["s"] or 0
 
-    return render(request, "caixa_dashboard.html", {
-        "total": total
+    return render(request, "caixa.html", {
+        "total": total,
+        "user": request.user
     })
 
-# ---------------------------
-# NOVA VENDA
-# ---------------------------
+
 @login_required
 def nova_venda(request):
     produtos = Produto.objects.all()
+    carrinho = request.session.get("carrinho", [])
+
     return render(request, "nova_venda.html", {
-        "produtos": produtos
+        "produtos": produtos,
+        "carrinho": carrinho
     })
 
-# ---------------------------
-# FINALIZAR VENDA (MULTI PRODUTO)
-# ---------------------------
+
+@login_required
+def adicionar_produto(request):
+    produto_id = request.POST.get("produto")
+    quantidade = int(request.POST.get("quantidade", 1))
+
+    produto = Produto.objects.get(id=produto_id)
+
+    carrinho = request.session.get("carrinho", [])
+
+    carrinho.append({
+        "id": produto.id,
+        "nome": produto.nome,
+        "preco": float(produto.preco),
+        "quantidade": quantidade
+    })
+
+    request.session["carrinho"] = carrinho
+
+    return redirect("/nova-venda/")
+
+
 @login_required
 def finalizar_venda(request):
-    if request.method != "POST":
-        return redirect("/caixa/")
+    carrinho = request.session.get("carrinho", [])
 
-    produtos_ids = request.POST.getlist("produto[]")
-    quantidades = request.POST.getlist("quantidade[]")
-    forma = request.POST.get("forma_pagamento")
-
-    if not produtos_ids:
-        messages.error(request, "Nenhum produto selecionado")
+    if not carrinho:
+        messages.error(request, "Carrinho vazio")
         return redirect("/nova-venda/")
 
-    for i in range(len(produtos_ids)):
-        produto = Produto.objects.get(id=produtos_ids[i])
-        quantidade = int(quantidades[i])
+    for item in carrinho:
+        produto = Produto.objects.get(id=item["id"])
+        quantidade = int(item["quantidade"])
+        preco = Decimal(str(item["preco"]))
 
         if produto.stock < quantidade:
-            messages.error(request, f"Stock insuficiente: {produto.nome}")
+            messages.error(request, f"Stock insuficiente para {produto.nome}")
             return redirect("/nova-venda/")
 
-        total = Decimal(produto.preco) * Decimal(quantidade)
-
-        # cria venda
-        Venda.objects.create(
-            produto=produto,
-            quantidade=quantidade,
-            preco_unitario=produto.preco,
-            total=total,
-            forma_pagamento=forma,
-            operador=request.user
-        )
-
-        # baixa stock
         produto.stock -= quantidade
         produto.save()
 
-    messages.success(request, "Venda registada com sucesso")
+        Venda.objects.create(
+            produto=produto,
+            quantidade=quantidade,
+            preco_unitario=preco,
+            total=preco * quantidade,
+            operador=request.user
+        )
+
+    request.session["carrinho"] = []
+
     return redirect("/caixa/")
