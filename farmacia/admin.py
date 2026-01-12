@@ -1,3 +1,4 @@
+from .admin_dashboard import dashboard_data
 from django.contrib import admin
 from .models import Produto, EntradaStock, SaidaStock, Venda
 
@@ -24,3 +25,19 @@ class VendaAdmin(admin.ModelAdmin):
     list_filter = ("forma_pagamento", "data")
     search_fields = ("produto__nome", "cliente")
     list_per_page = 20
+
+
+from django.contrib.admin import AdminSite
+
+class AlgikAdminSite(AdminSite):
+    site_header = "ALGIK – Farmácia Lalysalma"
+    site_title = "ALGIK Admin"
+    index_title = "Painel Executivo"
+
+    def each_context(self, request):
+        context = super().each_context(request)
+        context.update(dashboard_data(request))
+        return context
+
+algik_admin = AlgikAdminSite(name="algik_admin")
+
