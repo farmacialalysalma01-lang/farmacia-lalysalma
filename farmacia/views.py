@@ -54,12 +54,12 @@ def nova_venda(request):
 
         produto = Produto.objects.get(id=produto_id)
 
-        total = quantidade * produto.preco
+        total = quantidade * produto.preco_venda
 
         Venda.objects.create(
             produto=produto,
             quantidade=quantidade,
-            preco_unitario=produto.preco,
+            preco_unitario=produto.preco_venda,
             total=total,
             cliente=cliente,
             forma_pagamento=forma_pagamento,
