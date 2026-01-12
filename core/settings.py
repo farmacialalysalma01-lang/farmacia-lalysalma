@@ -97,40 +97,32 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 JAZZMIN_SETTINGS = {
     "site_title": "Farmácia Lalysalma",
     "site_header": "Farmácia Lalysalma",
-    "site_brand": "Sistema de Gestão",
-    "welcome_sign": "Bem-vindo ao Sistema da Farmácia Lalysalma",
-    "copyright": "Aldo Culpa",
-
-    "search_model": ["farmacia.Produto", "farmacia.Venda"],
+    "site_brand": "Farmácia Lalysalma",
+    "site_logo": "static/logo.png",
+    "welcome_sign": "Sistema de Gestão da Farmácia",
+    "search_model": ["auth.User", "farmacia.Produto", "farmacia.Venda"],
 
     "topmenu_links": [
         {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Nova Venda", "url": "/caixa/nova-venda/"},
+    ],
+
+    "usermenu_links": [
         {"name": "Site", "url": "/", "new_window": True},
     ],
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
 
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
-
         "farmacia.Produto": "fas fa-pills",
         "farmacia.Venda": "fas fa-cash-register",
         "farmacia.EntradaStock": "fas fa-truck-loading",
-        "farmacia.SaidaStock": "fas fa-dolly",
+        "farmacia.SaidaStock": "fas fa-warehouse",
     },
 
-    "order_with_respect_to": [
-        "farmacia",
-        "auth",
-    ],
-}
-
-JAZZMIN_UI_TWEAKS = {
     "theme": "flatly",
     "dark_mode_theme": "darkly",
-    "navbar": "navbar-primary",
-    "sidebar": "sidebar-dark-primary",
-    "accent": "accent-info",
-    "brand_colour": "navbar-primary",
 }
