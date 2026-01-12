@@ -3,11 +3,9 @@ from . import views
 
 urlpatterns = [
     path("", views.login_view, name="login"),
-
-    path("caixa/", views.caixa_home, name="caixa"),
-    path("caixa/nova-venda/", views.nova_venda, name="nova_venda"),
-    path("caixa/historico/", views.historico_vendas, name="historico"),
-    path("caixa/recibo/<int:venda_id>/", views.emitir_recibo, name="recibo"),
-
     path("logout/", views.logout_view, name="logout"),
+
+    path("caixa/", views.caixa, name="caixa"),
+    path("caixa/nova-venda/", views.nova_venda, name="nova_venda"),
+    path("caixa/historico/", views.historico_vendas, name="historico_vendas"),
 ]
