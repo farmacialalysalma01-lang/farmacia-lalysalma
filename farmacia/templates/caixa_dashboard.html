@@ -1,5 +1,58 @@
-<h2>Área do Caixa</h2>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>ALGIK | Caixa</title>
 
-<a href="/caixa/nova-venda/">Nova Venda</a><br>
-<a href="/caixa/historico/">Histórico de Vendas</a><br>
-<a href="/logout/">Sair</a>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body { background:#f4f6f9; }
+        .header { background:#0d6efd; color:white; padding:15px; }
+        .card-box { border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.1); }
+        .btn-caixa { font-size:18px; padding:20px; border-radius:10px; }
+    </style>
+</head>
+
+<body>
+
+<div class="header d-flex justify-content-between align-items-center">
+    <h4>💊 ALGIK – Caixa</h4>
+    <span>Operador: {{ request.user.username }}</span>
+</div>
+
+<div class="container mt-4">
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card card-box p-3 text-center">
+                <h6>Total Hoje</h6>
+                <h3 class="text-success">MZN {{ vendas_hoje }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <a href="/nova-venda/" class="btn btn-success w-100 btn-caixa">🛒 Nova Venda</a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="/historico-vendas/" class="btn btn-primary w-100 btn-caixa">📜 Histórico</a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="/emitir-recibo/" class="btn btn-warning w-100 btn-caixa">🧾 Emitir Recibo</a>
+        </div>
+
+        <div class="col-md-12">
+            <a href="/logout/" class="btn btn-danger w-100 btn-caixa">🔒 Sair</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
