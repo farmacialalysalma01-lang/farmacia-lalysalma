@@ -3,11 +3,9 @@ from . import views
 
 urlpatterns = [
     path("", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout"),
-
-    path("caixa/", views.caixa, name="caixa"),
+    path("home/", views.home, name="home"),
+    path("caixa/", views.area_caixa, name="caixa"),
     path("caixa/nova-venda/", views.nova_venda, name="nova_venda"),
-
-    path("gerente/", views.gerente, name="gerente"),
-    path("farmaceutico/", views.farmaceutico, name="farmaceutico"),
+    path("logout/", views.sair, name="logout"),
 ]
+
