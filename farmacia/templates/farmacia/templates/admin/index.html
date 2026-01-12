@@ -1,0 +1,59 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ vendas_hoje }}</h3>
+                <p>Vendas Hoje</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-cash-register"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{ vendas_mes }}</h3>
+                <p>Vendas do Mês</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>{{ produtos }}</h3>
+                <p>Produtos</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-pills"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{ em_falta }}</h3>
+                <p>Em falta</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{ block.super }}
+
+{% endblock %}
