@@ -121,8 +121,6 @@ JAZZMIN_SETTINGS = {
     "theme": "flatly",
 }
 
-# =========================
-# DASHBOARD
-# =========================
+# NÃO importar models aqui — só a função
 from farmacia.admin_dashboard import dashboard_data
 JAZZMIN_SETTINGS["custom_dashboard_context"] = dashboard_data
