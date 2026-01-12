@@ -21,10 +21,7 @@ class SaidaStockAdmin(admin.ModelAdmin):
 
 @admin.register(Venda)
 class VendaAdmin(admin.ModelAdmin):
-    list_display = ("id", "produto", "quantidade", "total", "forma_pagamento", "operador", "data")
-    list_filter = ("forma_pagamento", "data")
-    search_fields = ("produto__nome", "cliente")
-    list_per_page = 20
+    list_display = ("id", "total", "forma_pagamento", "operador", "data")
 
 
 from django.contrib.admin import AdminSite
