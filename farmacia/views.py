@@ -73,3 +73,32 @@ def nova_venda(request):
         "carrinho": carrinho,
         "total": total
     })
+
+@login_required
+def finalizar_venda(request):
+    carrinho = request.session.get("carrinho", [])
+    total = sum(item["total"] for item in carrinho)
+
+    venda = Venda.objects.create(
+        total=total,
+        forma_pagamento="Dinheiro",
+        operador=request.user
+    )
+
+    for item in carrinho:
+        produto = Produto.objects.get(id=item["id"])
+
+        VendaItem.objects.create(
+            venda=venda,
+            produto=produto,
+            quantidade=item["quantidade"],
+            preco=item["preco"],
+            total=item["total"]
+        )
+
+        produto.stock -= item["quantidade"]
+        produto.save()
+
+    request.session["carrinho"] = []
+
+    return redirect("/caixa/")
