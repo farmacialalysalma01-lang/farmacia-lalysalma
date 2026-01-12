@@ -39,3 +39,33 @@ def area_caixa(request):
     return render(request, "caixa_dashboard.html", {
         "vendas_hoje": total
     })
+
+# imports no topo
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
+from django.db.models import Sum
+from .models import Produto, Venda
+
+
+# login
+def login_view(request):
+    ...
+
+
+def logout_view(request):
+    ...
+
+
+# Caixa (dashboard)
+@login_required
+def area_caixa(request):
+    ...
+
+
+# 👇 NOVA VENDA vem aqui em baixo
+@login_required
+def nova_venda(request):
+    ...
+
