@@ -135,3 +135,13 @@ JAZZMIN_UI_TWEAKS = {
     "accent": "accent-info",
     "brand_colour": "navbar-primary",
 }
+
+"show_ui_builder": False,
+"custom_links": {
+    "farmacia": [{
+        "name": "Relatório de Vendas",
+        "url": "/admin/farmacia/venda/",
+        "icon": "fas fa-chart-line",
+        "permissions": ["farmacia.view_venda"]
+    }]
+},
