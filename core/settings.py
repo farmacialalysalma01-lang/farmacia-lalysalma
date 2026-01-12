@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     'farmacia',
 ]
 
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -95,35 +94,22 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Farmácia Lalysalma",
+    "site_title": "ALGIK Admin",
     "site_header": "Farmácia Lalysalma",
-    "site_brand": "Farmácia Lalysalma",
-    "welcome_sign": "Sistema de Gestão da Farmácia",
-    "search_model": ["auth.User", "farmacia.Produto", "farmacia.Venda"],
+    "site_brand": "ALGIK",
+    "welcome_sign": "Painel de Gestão da Farmácia",
+    "site_logo": "images/logo.png",
+
+    "theme": "flatly",
 
     "topmenu_links": [
-        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Nova Venda", "url": "/caixa/nova-venda/"},
+        {"name": "Dashboard", "url": "admin:index"},
+        {"name": "Nova Venda", "url": "/vendas/nova"},
     ],
 
     "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-
         "farmacia.Produto": "fas fa-pills",
         "farmacia.Venda": "fas fa-cash-register",
-        "farmacia.EntradaStock": "fas fa-truck-loading",
-        "farmacia.SaidaStock": "fas fa-warehouse",
-    },
+        "farmacia.Cliente": "fas fa-user",
+    }
 }
-
-JAZZMIN_UI_TWEAKS = {
-    "theme": "flatly",
-    "dark_mode_theme": "darkly",
-    "navbar": "navbar-primary",
-    "sidebar": "sidebar-dark-primary",
-    "accent": "accent-info",
-    "brand_colour": "navbar-primary",
-}
-
