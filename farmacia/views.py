@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from django.db.models import Sum
-
 from .models import Produto, Venda
+from .models import VendaItem
 
 
 # ============================
@@ -47,29 +47,29 @@ def area_caixa(request):
 @login_required
 def nova_venda(request):
     produtos = Produto.objects.all()
+    carrinho = request.session.get("carrinho", [])
 
     if request.method == "POST":
         produto_id = request.POST.get("produto")
         quantidade = int(request.POST.get("quantidade"))
 
         produto = Produto.objects.get(id=produto_id)
-        total = produto.preco * quantidade
 
-        Venda.objects.create(
-            produto=produto,
-            quantidade=quantidade,
-            preco_unitario=produto.preco,
-            total=total,
-            cliente="",
-            forma_pagamento="Dinheiro",
-            operador=request.user
-        )
+        carrinho.append({
+            "id": produto.id,
+            "nome": produto.nome,
+            "preco": float(produto.preco),
+            "quantidade": quantidade,
+            "total": float(produto.preco) * quantidade
+        })
 
-        produto.stock -= quantidade
-        produto.save()
+        request.session["carrinho"] = carrinho
+        return redirect("/nova-venda/")
 
-        return redirect("/caixa/")
+    total = sum(item["total"] for item in carrinho)
 
     return render(request, "nova_venda.html", {
-        "produtos": produtos
+        "produtos": produtos,
+        "carrinho": carrinho,
+        "total": total
     })
