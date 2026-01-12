@@ -1,8 +1,9 @@
 from django.utils.timezone import now
 from django.db.models import Sum
-from .models import Venda, Produto
 
 def dashboard_data(request):
+    from .models import Venda, Produto  # 👈 import DENTRO da função (seguro)
+
     hoje = now().date()
 
     vendas_hoje = Venda.objects.filter(data__date=hoje).aggregate(total=Sum('total'))['total'] or 0
