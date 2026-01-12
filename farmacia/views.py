@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from django.db.models import Sum
+
 from .models import Produto, Venda, VendaItem
 
 
@@ -41,7 +42,7 @@ def area_caixa(request):
 
 
 # ============================
-# NOVA VENDA
+# NOVA VENDA (CARRINHO)
 # ============================
 @login_required
 def nova_venda(request):
@@ -73,9 +74,11 @@ def nova_venda(request):
         "total": total
     })
 
+
+# ============================
+# FINALIZAR VENDA
+# ============================
 @login_required
-def finalizar_venda(request):
-    @login_required
 def finalizar_venda(request):
     carrinho = request.session.get("carrinho", [])
 
