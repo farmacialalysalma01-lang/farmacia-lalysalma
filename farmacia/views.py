@@ -85,7 +85,9 @@ def finalizar_venda(request):
     if not carrinho:
         return redirect("/nova-venda/")
 
-    total = sum(item["total"] for item in carrinho)
+    total = 0
+    for item in carrinho:
+        total += float(item["total"])
 
     venda = Venda.objects.create(
         total=total,
@@ -100,12 +102,12 @@ def finalizar_venda(request):
         VendaItem.objects.create(
             venda=venda,
             produto=produto,
-            quantidade=item["quantidade"],
+            quantidade=int(item["quantidade"]),
             preco=item["preco"],
             total=item["total"]
         )
 
-        produto.stock -= item["quantidade"]
+        produto.stock = produto.stock - int(item["quantidade"])
         produto.save()
 
     request.session["carrinho"] = []
