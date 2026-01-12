@@ -1,35 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nova Venda</title>
+</head>
+<body>
+
 <h2>Nova Venda</h2>
 
-{% if erro %}
-<p style="color:red;">{{ erro }}</p>
-{% endif %}
-
 <form method="post">
-  {% csrf_token %}
+    {% csrf_token %}
+    <select name="produto">
+        {% for p in produtos %}
+            <option value="{{ p.id }}">{{ p.nome }} - MZN {{ p.preco }}</option>
+        {% endfor %}
+    </select>
 
-  <label>Produto</label><br>
-  <select name="produto" required>
-    {% for p in produtos %}
-      <option value="{{ p.id }}">{{ p.nome }} ({{ p.stock }} em stock)</option>
-    {% endfor %}
-  </select><br><br>
+    <input type="number" name="quantidade" min="1" required>
 
-  <label>Quantidade</label><br>
-  <input type="number" name="quantidade" min="1" required><br><br>
-
-  <label>Cliente</label><br>
-  <input type="text" name="cliente"><br><br>
-
-  <label>Forma de Pagamento</label><br>
-  <select name="forma_pagamento" required>
-    <option value="Dinheiro">Dinheiro</option>
-    <option value="M-Pesa">M-Pesa</option>
-    <option value="E-Mola">E-Mola</option>
-    <option value="Cartão">Cartão</option>
-  </select><br><br>
-
-  <button type="submit">Registar Venda</button>
+    <button type="submit">Adicionar</button>
 </form>
 
-<br>
-<a href="/caixa/">Voltar</a>
+<h3>Carrinho</h3>
+
+<table border="1">
+<tr><th>Produto</th><th>Qtd</th><th>Total</th></tr>
+{% for item in carrinho %}
+<tr>
+    <td>{{ item.nome }}</td>
+    <td>{{ item.quantidade }}</td>
+    <td>MZN {{ item.total }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h3>Total: MZN {{ total }}</h3>
+
+<form method="post" action="/finalizar-venda/">
+    {% csrf_token %}
+    <button>Finalizar Venda</button>
+</form>
+
+</body>
+</html>
