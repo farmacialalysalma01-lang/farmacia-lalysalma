@@ -42,30 +42,43 @@ def area_caixa(request):
 # -------------------------
 # NOVA VENDA
 # -------------------------
+from django.utils import timezone
+
 @login_required
 def nova_venda(request):
-    produtos = Produto.objects.all()
+    produtos = Produto.objects.filter(stock__gt=0)
 
     if request.method == "POST":
         produto_id = request.POST.get("produto")
         quantidade = int(request.POST.get("quantidade"))
+        cliente = request.POST.get("cliente", "")
+        forma = request.POST.get("forma_pagamento")
 
         produto = Produto.objects.get(id=produto_id)
 
-        total = produto.preco * quantidade
+        if quantidade > produto.stock:
+            return render(request, "nova_venda.html", {
+                "produtos": produtos,
+                "erro": "Stock insuficiente!"
+            })
+
+        total = quantidade * produto.preco
 
         Venda.objects.create(
             produto=produto,
             quantidade=quantidade,
             preco_unitario=produto.preco,
             total=total,
-            operador=request.user
+            cliente=cliente,
+            forma_pagamento=forma,
+            operador=request.user,
+            data=timezone.now()
         )
 
-        produto.quantidade -= quantidade
+        produto.stock -= quantidade
         produto.save()
 
-        return redirect("caixa")
+        return redirect("/caixa/")
 
     return render(request, "nova_venda.html", {"produtos": produtos})
 
