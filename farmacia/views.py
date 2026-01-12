@@ -23,8 +23,8 @@ def logout_view(request):
 
 
 @login_required
-def caixa(request):
-    return render(request, "caixa.html")
+def area_caixa(request):
+    return render(request, "caixa_dashboard.html")
 
 
 @login_required
