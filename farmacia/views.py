@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Produto, Venda
 
-# ---------- LOGIN ----------
+
 def login_view(request):
     if request.method == "POST":
         user = authenticate(
@@ -13,24 +13,19 @@ def login_view(request):
         )
         if user:
             login(request, user)
-
-            if user.groups.filter(name="CAIXA").exists():
-                return redirect("caixa")
-
-            return redirect("/admin/")
-        else:
-            return render(request, "login.html", {"error": "Credenciais inválidas"})
-
+            return redirect("/caixa/")
     return render(request, "login.html")
+
 
 def logout_view(request):
     logout(request)
-    return redirect("login")
+    return redirect("/")
 
-# ---------- CAIXA ----------
+
 @login_required
-def caixa_dashboard(request):
-    return render(request, "caixa_dashboard.html")
+def caixa_home(request):
+    return render(request, "caixa.html")
+
 
 @login_required
 def nova_venda(request):
@@ -43,6 +38,8 @@ def nova_venda(request):
         forma = request.POST["forma"]
 
         total = produto.preco * quantidade
+        produto.stock -= quantidade
+        produto.save()
 
         Venda.objects.create(
             produto=produto,
@@ -54,17 +51,16 @@ def nova_venda(request):
             operador=request.user
         )
 
-        produto.stock -= quantidade
-        produto.save()
-
-        return redirect("historico_vendas")
+        return redirect("/caixa/historico/")
 
     return render(request, "nova_venda.html", {"produtos": produtos})
 
+
 @login_required
 def historico_vendas(request):
-    vendas = Venda.objects.order_by("-data")
+    vendas = Venda.objects.all().order_by("-data")
     return render(request, "historico_vendas.html", {"vendas": vendas})
+
 
 @login_required
 def emitir_recibo(request, venda_id):
