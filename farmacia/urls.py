@@ -5,7 +5,9 @@ from .views import (
     area_caixa,
     nova_venda,
     adicionar_produto,
-    finalizar_venda
+    finalizar_venda,
+    historico_vendas,
+    emitir_recibo
 )
 
 urlpatterns = [
@@ -17,4 +19,7 @@ urlpatterns = [
     path("nova-venda/", nova_venda),
     path("adicionar-produto/", adicionar_produto),
     path("finalizar-venda/", finalizar_venda),
+
+    path("historico-vendas/", historico_vendas),
+    path("emitir-recibo/", emitir_recibo),
 ]
