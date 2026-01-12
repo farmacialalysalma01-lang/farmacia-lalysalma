@@ -64,7 +64,7 @@ class Venda(models.Model):
 # ITENS DA VENDA (CARRINHO)
 # =========================
 class VendaItem(models.Model):
-    venda = models.ForeignKey("Venda", on_delete=models.CASCADE, related_name="itens")
+    venda = models.ForeignKey(Venda, on_delete=models.CASCADE, related_name="itens")
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     quantidade = models.PositiveIntegerField()
     preco = models.DecimalField(max_digits=10, decimal_places=2)
