@@ -25,7 +25,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("/")
+    return redirect("/login/")
 
 
 # ============================
@@ -40,32 +40,36 @@ def area_caixa(request):
         "vendas_hoje": total
     })
 
-# imports no topo
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.utils.timezone import now
-from django.db.models import Sum
-from .models import Produto, Venda
 
-
-# login
-def login_view(request):
-    ...
-
-
-def logout_view(request):
-    ...
-
-
-# Caixa (dashboard)
-@login_required
-def area_caixa(request):
-    ...
-
-
-# 👇 NOVA VENDA vem aqui em baixo
+# ============================
+# NOVA VENDA
+# ============================
 @login_required
 def nova_venda(request):
-    ...
+    produtos = Produto.objects.all()
 
+    if request.method == "POST":
+        produto_id = request.POST.get("produto")
+        quantidade = int(request.POST.get("quantidade"))
+
+        produto = Produto.objects.get(id=produto_id)
+        total = produto.preco * quantidade
+
+        Venda.objects.create(
+            produto=produto,
+            quantidade=quantidade,
+            preco_unitario=produto.preco,
+            total=total,
+            cliente="",
+            forma_pagamento="Dinheiro",
+            operador=request.user
+        )
+
+        produto.stock -= quantidade
+        produto.save()
+
+        return redirect("/caixa/")
+
+    return render(request, "nova_venda.html", {
+        "produtos": produtos
+    })
