@@ -1,15 +1,14 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from .models import Produto, Venda
 from django.utils.timezone import now
-from django.db.models import Sum
+from decimal import Decimal
 
-from .models import Produto, Venda, VendaItem
-
-
-# ============================
+# ---------------------------
 # LOGIN
-# ============================
+# ---------------------------
 def login_view(request):
     if request.method == "POST":
         user = authenticate(
@@ -20,96 +19,76 @@ def login_view(request):
         if user:
             login(request, user)
             return redirect("/caixa/")
+        else:
+            messages.error(request, "Login inválido")
     return render(request, "login.html")
-
 
 def logout_view(request):
     logout(request)
-    return redirect("/login/")
+    return redirect("/")
 
-
-# ============================
-# CAIXA (DASHBOARD)
-# ============================
+# ---------------------------
+# CAIXA
+# ---------------------------
 @login_required
 def area_caixa(request):
-    hoje = now().date()
-    total = Venda.objects.filter(data__date=hoje).aggregate(Sum("total"))["total__sum"] or 0
+    total = Venda.objects.filter(data__date=now().date()).aggregate(
+        total=models.Sum("total")
+    )["total"] or 0
 
     return render(request, "caixa_dashboard.html", {
-        "vendas_hoje": total
-    })
-
-
-# ============================
-# NOVA VENDA (CARRINHO)
-# ============================
-@login_required
-def nova_venda(request):
-    produtos = Produto.objects.all()
-    carrinho = request.session.get("carrinho", [])
-
-    if request.method == "POST":
-        produto_id = request.POST.get("produto")
-        quantidade = int(request.POST.get("quantidade"))
-
-        produto = Produto.objects.get(id=produto_id)
-
-        carrinho.append({
-            "id": produto.id,
-            "nome": produto.nome,
-            "preco": float(produto.preco),
-            "quantidade": quantidade,
-            "total": float(produto.preco) * quantidade
-        })
-
-        request.session["carrinho"] = carrinho
-        return redirect("/nova-venda/")
-
-    total = sum(item["total"] for item in carrinho)
-
-    return render(request, "nova_venda.html", {
-        "produtos": produtos,
-        "carrinho": carrinho,
         "total": total
     })
 
+# ---------------------------
+# NOVA VENDA
+# ---------------------------
+@login_required
+def nova_venda(request):
+    produtos = Produto.objects.all()
+    return render(request, "nova_venda.html", {
+        "produtos": produtos
+    })
 
-# ============================
-# FINALIZAR VENDA
-# ============================
+# ---------------------------
+# FINALIZAR VENDA (MULTI PRODUTO)
+# ---------------------------
 @login_required
 def finalizar_venda(request):
-    carrinho = request.session.get("carrinho", [])
+    if request.method != "POST":
+        return redirect("/caixa/")
 
-    if not carrinho:
+    produtos_ids = request.POST.getlist("produto[]")
+    quantidades = request.POST.getlist("quantidade[]")
+    forma = request.POST.get("forma_pagamento")
+
+    if not produtos_ids:
+        messages.error(request, "Nenhum produto selecionado")
         return redirect("/nova-venda/")
 
-    total = 0
-    for item in carrinho:
-        total += float(item["total"])
+    for i in range(len(produtos_ids)):
+        produto = Produto.objects.get(id=produtos_ids[i])
+        quantidade = int(quantidades[i])
 
-    venda = Venda.objects.create(
-        total=total,
-        cliente="",
-        forma_pagamento="Dinheiro",
-        operador=request.user
-    )
+        if produto.stock < quantidade:
+            messages.error(request, f"Stock insuficiente: {produto.nome}")
+            return redirect("/nova-venda/")
 
-    for item in carrinho:
-        produto = Produto.objects.get(id=item["id"])
+        total = Decimal(produto.preco) * Decimal(quantidade)
 
-        VendaItem.objects.create(
-            venda=venda,
+        # cria venda
+        Venda.objects.create(
             produto=produto,
-            quantidade=int(item["quantidade"]),
-            preco=item["preco"],
-            total=item["total"]
+            quantidade=quantidade,
+            preco_unitario=produto.preco,
+            total=total,
+            forma_pagamento=forma,
+            operador=request.user
         )
 
-        produto.stock = produto.stock - int(item["quantidade"])
+        # baixa stock
+        produto.stock -= quantidade
         produto.save()
 
-    request.session["carrinho"] = []
-
+    messages.success(request, "Venda registada com sucesso")
     return redirect("/caixa/")
