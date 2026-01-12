@@ -3,8 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from django.db.models import Sum
-from .models import Produto, Venda
-from .models import VendaItem
+from .models import Produto, Venda, VendaItem
 
 
 # ============================
@@ -76,11 +75,18 @@ def nova_venda(request):
 
 @login_required
 def finalizar_venda(request):
+    @login_required
+def finalizar_venda(request):
     carrinho = request.session.get("carrinho", [])
+
+    if not carrinho:
+        return redirect("/nova-venda/")
+
     total = sum(item["total"] for item in carrinho)
 
     venda = Venda.objects.create(
         total=total,
+        cliente="",
         forma_pagamento="Dinheiro",
         operador=request.user
     )
