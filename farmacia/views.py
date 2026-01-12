@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
 from django.db.models import Sum
 from django.contrib import messages
 from .models import Produto, Venda
@@ -72,33 +73,39 @@ def adicionar_produto(request):
 
 @login_required
 def finalizar_venda(request):
-    carrinho = request.session.get("carrinho", [])
+    if request.method == "POST":
 
-    if not carrinho:
-        messages.error(request, "Carrinho vazio")
-        return redirect("/nova-venda/")
+        produto_id = request.POST.get("produto")
+        quantidade = int(request.POST.get("quantidade"))
+        forma_pagamento = request.POST.get("forma_pagamento")
 
-    for item in carrinho:
-        produto = Produto.objects.get(id=item["id"])
-        quantidade = int(item["quantidade"])
-        preco = Decimal(str(item["preco"]))
+        produto = Produto.objects.get(id=produto_id)
 
-        if produto.stock < quantidade:
-            messages.error(request, f"Stock insuficiente para {produto.nome}")
+        # Verifica stock
+        if quantidade > produto.stock:
             return redirect("/nova-venda/")
 
+        total = produto.preco * quantidade
+
+        # Criar venda no banco
+        venda = Venda.objects.create(
+            produto=produto,
+            quantidade=quantidade,
+            preco_unitario=produto.preco,
+            total=total,
+            operador=request.user,
+            data=now(),
+            forma_pagamento=forma_pagamento
+        )
+
+        # Descontar stock
         produto.stock -= quantidade
         produto.save()
 
-        Venda.objects.create(
-            produto=produto,
-            quantidade=quantidade,
-            preco_unitario=preco,
-            total=preco * quantidade,
-            operador=request.user
-        )
+        # Guardar venda na sessão para recibo
+        request.session["ultima_venda_id"] = venda.id
 
-    request.session["carrinho"] = []
+        return redirect("/emitir-recibo/")
 
     return redirect("/caixa/")
 
