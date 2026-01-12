@@ -1,44 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
-    <title>Nova Venda</title>
+<meta charset="UTF-8">
+<title>Nova Venda | ALGIK</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+}
+.topbar{
+    background:#0d6efd;
+    color:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.container{
+    max-width:1000px;
+    margin:30px auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+h2{
+    margin-bottom:20px;
+}
+select,input{
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    width:100%;
+}
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
+.btn-add{
+    background:#198754;
+    color:white;
+}
+.btn-remove{
+    background:#dc3545;
+    color:white;
+}
+.btn-final{
+    background:#0d6efd;
+    color:white;
+    width:100%;
+    margin-top:20px;
+}
+.grid{
+    display:grid;
+    grid-template-columns:3fr 1fr 1fr;
+    gap:10px;
+    margin-bottom:10px;
+}
+.row{
+    display:grid;
+    grid-template-columns:3fr 1fr 1fr;
+    gap:10px;
+    margin-bottom:10px;
+}
+.total{
+    font-size:24px;
+    color:#198754;
+    text-align:right;
+    margin-top:20px;
+}
+</style>
 </head>
 <body>
 
-<h2>Nova Venda</h2>
+<div class="topbar">
+    <div>💊 <b>ALGIK – Nova Venda</b></div>
+    <div>Operador: {{ request.user.username }}</div>
+</div>
 
-<form method="post">
-    {% csrf_token %}
-    <select name="produto">
-        {% for p in produtos %}
-            <option value="{{ p.id }}">{{ p.nome }} - MZN {{ p.preco }}</option>
-        {% endfor %}
-    </select>
-
-    <input type="number" name="quantidade" min="1" required>
-
-    <button type="submit">Adicionar</button>
-</form>
-
-<h3>Carrinho</h3>
-
-<table border="1">
-<tr><th>Produto</th><th>Qtd</th><th>Total</th></tr>
-{% for item in carrinho %}
-<tr>
-    <td>{{ item.nome }}</td>
-    <td>{{ item.quantidade }}</td>
-    <td>MZN {{ item.total }}</td>
-</tr>
-{% endfor %}
-</table>
-
-<h3>Total: MZN {{ total }}</h3>
+<div class="container">
+<h2>Adicionar Produtos</h2>
 
 <form method="post" action="/finalizar-venda/">
-    {% csrf_token %}
-    <button>Finalizar Venda</button>
+{% csrf_token %}
+
+<div class="grid">
+    <b>Produto</b>
+    <b>Qtd</b>
+    <b>Ação</b>
+</div>
+
+<div id="lista">
+
+<div class="row">
+    <select name="produto[]" required>
+        {% for p in produtos %}
+        <option value="{{ p.id }}">{{ p.nome }} — {{ p.preco }} MZN ({{ p.stock }} un)</option>
+        {% endfor %}
+    </select>
+    <input type="number" name="quantidade[]" value="1" min="1" required>
+    <button type="button" class="btn-remove" onclick="remover(this)">X</button>
+</div>
+
+</div>
+
+<button type="button" class="btn-add" onclick="adicionar()">+ Adicionar Produto</button>
+
+<br><br>
+
+<select name="forma_pagamento" required>
+    <option value="">Forma de Pagamento</option>
+    <option>Dinheiro</option>
+    <option>M-Pesa</option>
+    <option>E-Mola</option>
+    <option>Cartão</option>
+</select>
+
+<button class="btn-final">Finalizar Venda</button>
+
 </form>
+
+</div>
+
+<script>
+function adicionar(){
+    let linha = document.querySelector(".row").cloneNode(true);
+    linha.querySelector("input").value = 1;
+    document.getElementById("lista").appendChild(linha);
+}
+
+function remover(botao){
+    let linhas = document.querySelectorAll(".row");
+    if(linhas.length > 1){
+        botao.parentElement.remove();
+    }
+}
+</script>
 
 </body>
 </html>
