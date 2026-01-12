@@ -1,17 +1,15 @@
-<h2>Farmácia Lalysalma</h2>
-<hr>
+<h2>Recibo de Venda</h2>
 
-<p><b>Recibo Nº:</b> {{ venda.id }}</p>
+{% if venda %}
 <p><b>Produto:</b> {{ venda.produto.nome }}</p>
 <p><b>Quantidade:</b> {{ venda.quantidade }}</p>
-<p><b>Preço Unitário:</b> {{ venda.preco_unitario }} MT</p>
-<p><b>Total:</b> {{ venda.total }} MT</p>
-<p><b>Forma de Pagamento:</b> {{ venda.forma_pagamento }}</p>
-<p><b>Cliente:</b> {{ venda.cliente }}</p>
+<p><b>Preço:</b> {{ venda.preco_unitario }}</p>
+<p><b>Total:</b> {{ venda.total }}</p>
 <p><b>Operador:</b> {{ venda.operador.username }}</p>
 <p><b>Data:</b> {{ venda.data }}</p>
+{% else %}
+<p>Nenhuma venda encontrada.</p>
+{% endif %}
 
-<hr>
-<button onclick="window.print()">Imprimir Recibo</button>
-<br><br>
-<a href="/caixa/recibos/">Voltar</a>
+<br>
+<a href="/caixa/">⬅ Voltar</a>
