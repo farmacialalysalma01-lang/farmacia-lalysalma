@@ -100,6 +100,10 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Painel de Gestão da Farmácia",
     "site_logo": "images/logo.png",
 
+from farmacia.admin_dashboard import dashboard_data
+
+JAZZMIN_SETTINGS["custom_dashboard_context"] = dashboard_data
+
     "theme": "flatly",
 
     "topmenu_links": [
@@ -113,3 +117,4 @@ JAZZMIN_SETTINGS = {
         "farmacia.Cliente": "fas fa-user",
     }
 }
+
