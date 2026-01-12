@@ -112,6 +112,7 @@ def finalizar_venda(request):
 @login_required
 def historico_vendas(request):
     vendas = Venda.objects.order_by("-data")
+
     return render(request, "historico.html", {"vendas": vendas})
 
 
