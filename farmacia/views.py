@@ -67,3 +67,16 @@ def nova_venda(request):
 def historico_vendas(request):
     vendas = Venda.objects.all().order_by("-data")
     return render(request, "historico_vendas.html", {"vendas": vendas})
+
+
+from .models import Venda
+
+def lista_recibos(request):
+    vendas = Venda.objects.all().order_by("-data")
+    return render(request, "lista_recibos.html", {"vendas": vendas})
+
+
+def emitir_recibo(request, venda_id):
+    venda = Venda.objects.get(id=venda_id)
+    return render(request, "recibo.html", {"venda": venda})
+
