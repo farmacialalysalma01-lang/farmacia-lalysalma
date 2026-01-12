@@ -61,3 +61,17 @@ class Venda(models.Model):
 
     def __str__(self):
         return f"Venda {self.id} - {self.produto.nome}"
+
+# =========================
+# ITENS DA VENDA (CARRINHO)
+# =========================
+class VendaItem(models.Model):
+    venda = models.ForeignKey("Venda", on_delete=models.CASCADE, related_name="itens")
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    quantidade = models.PositiveIntegerField()
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.produto.nome} x {self.quantidade}"
+
