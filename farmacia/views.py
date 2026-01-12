@@ -23,8 +23,17 @@ def logout_view(request):
 
 
 @login_required
+from django.utils.timezone import now
+from django.db.models import Sum
+from .models import Venda
+
 def area_caixa(request):
-    return render(request, "caixa_dashboard.html")
+    hoje = now().date()
+    total = Venda.objects.filter(data__date=hoje).aggregate(Sum('total'))['total__sum'] or 0
+
+    return render(request, "caixa_dashboard.html", {
+        "vendas_hoje": total
+    })
 
 
 @login_required
