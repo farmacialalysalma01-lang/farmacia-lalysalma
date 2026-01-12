@@ -1,13 +1,9 @@
 from django.urls import path
-from . import views
+from .views import login_view, logout_view, area_caixa
 
 urlpatterns = [
-    path("", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout"),
-
-    path("caixa/", views.caixa, name="caixa"),
-    path("caixa/nova-venda/", views.nova_venda, name="nova_venda"),
-    path("caixa/historico/", views.historico_vendas, name="historico_vendas"),
-    path("caixa/recibos/", views.lista_recibos, name="lista_recibos"),
-    path("caixa/recibo/<int:venda_id>/", views.emitir_recibo, name="emitir_recibo"),
+    path("", login_view, name="login"),
+    path("login/", login_view, name="login"),
+    path("logout/", logout_view, name="logout"),
+    path("caixa/", area_caixa, name="caixa"),
 ]
