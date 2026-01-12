@@ -96,36 +96,31 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 JAZZMIN_SETTINGS = {
     "site_title": "Farmácia Lalysalma",
     "site_header": "Farmácia Lalysalma",
-    "site_brand": "Farmácia Lalysalma",
-    "site_logo": "https://cdn-icons-png.flaticon.com/512/2966/2966484.png",
+    "site_brand": "Sistema de Gestão",
     "welcome_sign": "Bem-vindo ao Sistema da Farmácia Lalysalma",
     "copyright": "Aldo Culpa",
-    "search_model": ["farmacia.Produto"],
+
+    "search_model": ["farmacia.Produto", "farmacia.Venda"],
 
     "topmenu_links": [
         {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Ver site", "url": "/", "new_window": True},
+        {"name": "Nova Venda", "url": "/caixa/nova-venda/"},
+        {"name": "Site", "url": "/", "new_window": True},
     ],
 
     "icons": {
-        "auth": "fas fa-users",
+        "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users-cog",
+        "auth.Group": "fas fa-users",
+
         "farmacia.Produto": "fas fa-pills",
-        "farmacia.EntradaStock": "fas fa-arrow-down",
-        "farmacia.SaidaStock": "fas fa-arrow-up",
+        "farmacia.Venda": "fas fa-cash-register",
+        "farmacia.EntradaStock": "fas fa-truck-loading",
+        "farmacia.SaidaStock": "fas fa-dolly",
     },
 
-    "theme": "flatly",
-}
-
-# FORCE JAZZMIN
-JAZZMIN_SETTINGS = {
-    "site_title": "Farmácia Lalysalma",
-    "site_header": "Farmácia Lalysalma",
-    "site_brand": "Farmácia Lalysalma",
-    "welcome_sign": "Sistema de Gestão da Farmácia Lalysalma",
-    "site_logo": "https://cdn-icons-png.flaticon.com/512/2966/2966484.png",
-    "copyright": "Aldo Culpa",
-    "theme": "flatly",
+    "order_with_respect_to": [
+        "farmacia",
+        "auth",
+    ],
 }
