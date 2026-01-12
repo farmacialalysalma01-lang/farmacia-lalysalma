@@ -101,3 +101,15 @@ def finalizar_venda(request):
     request.session["carrinho"] = []
 
     return redirect("/caixa/")
+
+@login_required
+def historico_vendas(request):
+    vendas = Venda.objects.order_by("-data")
+    return render(request, "historico.html", {"vendas": vendas})
+
+
+@login_required
+def emitir_recibo(request):
+    ultima = Venda.objects.last()
+    return render(request, "recibo.html", {"venda": ultima})
+
