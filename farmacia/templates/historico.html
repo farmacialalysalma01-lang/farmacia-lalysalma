@@ -1,25 +1,24 @@
 <h2>Histórico de Vendas</h2>
 
-<table border="1">
+<table border="1" cellpadding="10">
 <tr>
+    <th>Data</th>
     <th>Produto</th>
     <th>Qtd</th>
     <th>Total</th>
-    <th>Data</th>
-    <th>Recibo</th>
+    <th>Operador</th>
 </tr>
 
 {% for v in vendas %}
 <tr>
+    <td>{{ v.data }}</td>
     <td>{{ v.produto.nome }}</td>
     <td>{{ v.quantidade }}</td>
-    <td>{{ v.total }}</td>
-    <td>{{ v.data }}</td>
-    <td>
-        <a href="/caixa/recibo/{{ v.id }}/">Emitir Recibo</a>
-    </td>
+    <td>MZN {{ v.total }}</td>
+    <td>{{ v.operador.username }}</td>
 </tr>
 {% endfor %}
 </table>
 
-<a href="/caixa/">Voltar</a>
+<br>
+<a href="/caixa/">⬅ Voltar</a>
