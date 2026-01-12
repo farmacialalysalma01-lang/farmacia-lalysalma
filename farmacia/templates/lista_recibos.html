@@ -1,0 +1,21 @@
+<h2>Recibos</h2>
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>Produto</th>
+  <th>Total</th>
+  <th>Data</th>
+  <th>Recibo</th>
+</tr>
+{% for v in vendas %}
+<tr>
+  <td>{{ v.id }}</td>
+  <td>{{ v.produto.nome }}</td>
+  <td>{{ v.total }} MT</td>
+  <td>{{ v.data }}</td>
+  <td><a href="/caixa/recibo/{{ v.id }}/">Imprimir</a></td>
+</tr>
+{% endfor %}
+</table>
+<br>
+<a href="/caixa/">Voltar</a>
