@@ -30,7 +30,7 @@ class SaidaStock(models.Model):
 
 
 class Venda(models.Model):
-    FORMA_PAGAMENTO = [
+    Forma_Pagamento = [
         ("Dinheiro", "Dinheiro"),
         ("M-Pesa", "M-Pesa"),
         ("E-Mola", "E-Mola"),
