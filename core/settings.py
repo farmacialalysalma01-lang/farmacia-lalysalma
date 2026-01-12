@@ -99,12 +99,10 @@ JAZZMIN_SETTINGS = {
     "site_brand": "ALGIK",
     "welcome_sign": "Painel de Gestão da Farmácia",
     "site_logo": "images/logo.png",
-
-from farmacia.admin_dashboard import dashboard_data
-
-JAZZMIN_SETTINGS["custom_dashboard_context"] = dashboard_data
-
     "theme": "flatly",
+}  
+from farmacia.admin_dashboard import dashboard_data
+JAZZMIN_SETTINGS["custom_dashboard_context"] = dashboard_data
 
     "topmenu_links": [
         {"name": "Dashboard", "url": "admin:index"},
