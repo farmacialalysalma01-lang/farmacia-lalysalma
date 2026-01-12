@@ -1,15 +1,79 @@
-<h2>Recibo de Venda</h2>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Recibo - ALGIK</title>
 
-{% if venda %}
-<p><b>Produto:</b> {{ venda.produto.nome }}</p>
-<p><b>Quantidade:</b> {{ venda.quantidade }}</p>
-<p><b>Preço:</b> {{ venda.preco_unitario }}</p>
-<p><b>Total:</b> {{ venda.total }}</p>
-<p><b>Operador:</b> {{ venda.operador.username }}</p>
-<p><b>Data:</b> {{ venda.data }}</p>
-{% else %}
-<p>Nenhuma venda encontrada.</p>
-{% endif %}
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
 
-<br>
-<a href="/caixa/">⬅ Voltar</a>
+.recibo {
+    background: white;
+    width: 350px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+h2 {
+    text-align: center;
+}
+
+.linha {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: bold;
+    border-top: 1px dashed black;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.btn {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    margin-top: 15px;
+    background: #0d6efd;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.print {
+    background: #198754;
+}
+</style>
+</head>
+
+<body>
+
+<div class="recibo">
+    <h2>ALGIK</h2>
+    <p style="text-align:center">Recibo de Venda</p>
+
+    {% if venda %}
+        <div class="linha"><span>Produto:</span><span>{{ venda.produto.nome }}</span></div>
+        <div class="linha"><span>Quantidade:</span><span>{{ venda.quantidade }}</span></div>
+        <div class="linha"><span>Preço:</span><span>{{ venda.preco_unitario }} MZN</span></div>
+        <div class="linha total"><span>Total:</span><span>{{ venda.total }} MZN</span></div>
+        <hr>
+        <div class="linha"><span>Operador:</span><span>{{ venda.operador.username }}</span></div>
+        <div class="linha"><span>Data:</span><span>{{ venda.data }}</span></div>
+    {% else %}
+        <p>Nenhuma venda encontrada.</p>
+    {% endif %}
+
+    <a href="#" class="btn print" onclick="window.print()">🖨️ Imprimir</a>
+    <a href="/caixa/" class="btn">⬅ Voltar</a>
+</div>
+
+</body>
+</html>
