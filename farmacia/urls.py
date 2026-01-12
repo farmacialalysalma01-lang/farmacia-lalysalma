@@ -1,7 +1,11 @@
+from django.urls import path
 from .views import (
-    login_view, logout_view,
-    area_caixa, nova_venda,
-    adicionar_produto, finalizar_venda
+    login_view,
+    logout_view,
+    area_caixa,
+    nova_venda,
+    adicionar_produto,
+    finalizar_venda
 )
 
 urlpatterns = [
