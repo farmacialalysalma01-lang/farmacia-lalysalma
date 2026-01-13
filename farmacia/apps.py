@@ -1,19 +1,15 @@
 from django.apps import AppConfig
+from django.db import connection
 
 class FarmaciaConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "farmacia"
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'farmacia'
 
     def ready(self):
-        from django.contrib.auth.models import User
-        from django.db.utils import OperationalError
-
         try:
-            if not User.objects.filter(username="admin").exists():
-                User.objects.create_superuser(
-                    username="admin",
-                    password="Admin@2026",
-                    email="admin@farmacialalysalma.com"
-                )
-        except OperationalError:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    DROP TABLE IF EXISTS farmacia_venda CASCADE;
+                """)
+        except:
             pass
