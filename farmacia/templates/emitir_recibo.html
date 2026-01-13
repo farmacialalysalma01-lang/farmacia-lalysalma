@@ -1,24 +1,18 @@
-<h2>Recibo</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recibo</title>
+</head>
+<body>
+    <h2>Recibo da Venda</h2>
 
-<p>Data: {{ venda.data }}</p>
-<p>Total: {{ venda.total }} MZN</p>
+    <p>Data: {{ venda.data }}</p>
+    <p>Total: {{ venda.total }} MZN</p>
+    <p>Pagamento: {{ venda.pagamento }}</p>
 
-<table border="1">
-<tr>
-    <th>Produto</th>
-    <th>Qtd</th>
-    <th>Preço</th>
-</tr>
+    <button onclick="window.print()">🖨️ Imprimir</button>
 
-{% for i in itens %}
-<tr>
-    <td>{{ i.produto.nome }}</td>
-    <td>{{ i.quantidade }}</td>
-    <td>{{ i.preco }}</td>
-</tr>
-{% endfor %}
-</table>
-
-<button onclick="window.print()">Imprimir</button>
-<br><br>
-<a href="/caixa/">Voltar ao Caixa</a>
+    <br><br>
+    <a href="/caixa/">⬅ Voltar</a>
+</body>
+</html>
