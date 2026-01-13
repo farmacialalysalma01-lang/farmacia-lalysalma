@@ -37,8 +37,8 @@ ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [ BASE_DIR / "farmacia" / "templates" ],
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / "farmacia" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
