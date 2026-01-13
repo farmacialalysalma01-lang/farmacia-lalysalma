@@ -1,96 +1,100 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.db.models import Sum
+from django.utils.timezone import now
+
 from .models import Produto, Venda, ItemVenda
-from django.utils import timezone
 
 
-# =========================
-# ÁREA DO CAIXA
-# =========================
+# ---------- LOGIN ----------
+def login_view(request):
+    if request.method == "POST":
+        user = authenticate(
+            request,
+            username=request.POST.get("username"),
+            password=request.POST.get("password"),
+        )
+        if user:
+            login(request, user)
+            return redirect("caixa")
+    return render(request, "login.html")
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+
+# ---------- CAIXA ----------
 @login_required
 def area_caixa(request):
-    hoje = timezone.now().date()
-
-    total = Venda.objects.filter(data__date=hoje).aggregate(Sum('total'))['total__sum']
-    total = total if total else 0
+    total = (
+        Venda.objects.filter(data__date=now().date())
+        .aggregate(total=Sum("total"))["total"]
+        or 0
+    )
 
     return render(request, "caixa.html", {
         "total_hoje": total
     })
 
 
-# =========================
-# NOVA VENDA
-# =========================
+# ---------- NOVA VENDA ----------
 @login_required
 def nova_venda(request):
     produtos = Produto.objects.all()
     return render(request, "nova_venda.html", {"produtos": produtos})
 
 
-# =========================
-# FINALIZAR VENDA
-# =========================
+# ---------- FINALIZAR VENDA ----------
 @login_required
 def finalizar_venda(request):
-    if request.method == "POST":
-        forma_pagamento = request.POST.get("forma_pagamento")
-        itens = request.POST.getlist("produtos[]")
-        quantidades = request.POST.getlist("quantidades[]")
+    if request.method != "POST":
+        return redirect("nova_venda")
 
-        if not itens:
-            return redirect("nova_venda")
+    produtos_ids = request.POST.getlist("produto")
+    quantidades = request.POST.getlist("quantidade")
 
-        venda = Venda.objects.create(
-            usuario=request.user,
-            forma_pagamento=forma_pagamento,
-            total=0
+    venda = Venda.objects.create(usuario=request.user)
+
+    total = 0
+
+    for pid, qtd in zip(produtos_ids, quantidades):
+        produto = get_object_or_404(Produto, id=pid)
+        qtd = int(qtd)
+
+        subtotal = produto.preco * qtd
+        total += subtotal
+
+        ItemVenda.objects.create(
+            venda=venda,
+            produto=produto,
+            quantidade=qtd,
+            preco=produto.preco
         )
 
-        total = 0
+        produto.stock -= qtd
+        produto.save()
 
-        for i in range(len(itens)):
-            produto = Produto.objects.get(id=itens[i])
-            qtd = int(quantidades[i])
+    venda.total = total
+    venda.save()
 
-            subtotal = produto.preco * qtd
-            total += subtotal
-
-            ItemVenda.objects.create(
-                venda=venda,
-                produto=produto,
-                quantidade=qtd,
-                preco=produto.preco
-            )
-
-            produto.stock -= qtd
-            produto.save()
-
-        venda.total = total
-        venda.save()
-
-        return redirect("emitir_recibo", venda_id=venda.id)
+    return redirect("emitir_recibo")
 
 
-# =========================
-# HISTÓRICO
-# =========================
+# ---------- HISTÓRICO ----------
 @login_required
 def historico_vendas(request):
-    vendas = Venda.objects.order_by("-data")
-    return render(request, "historico.html", {"vendas": vendas})
+    vendas = Venda.objects.all().order_by("-data")
+    return render(request, "historico_vendas.html", {"vendas": vendas})
 
 
-# =========================
-# RECIBO
-# =========================
+# ---------- RECIBO ----------
 @login_required
-def emitir_recibo(request, venda_id):
-    venda = get_object_or_404(Venda, id=venda_id)
+def emitir_recibo(request):
+    venda = Venda.objects.last()
     itens = ItemVenda.objects.filter(venda=venda)
-
     return render(request, "recibo.html", {
         "venda": venda,
         "itens": itens
