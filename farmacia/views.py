@@ -1,90 +1,142 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-from django.db.models import Sum
-
 from .models import Produto, Venda, ItemVenda
 
 
+# =======================
+# LOGIN / LOGOUT
+# =======================
+
 def login_view(request):
     if request.method == "POST":
-        user = authenticate(
-            request,
-            username=request.POST.get("username"),
-            password=request.POST.get("password"),
-        )
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
         if user:
             login(request, user)
-            return redirect("/caixa/")
-    return render(request, "farmacia/login.html")
+            return redirect("caixa")
+
+    return render(request, "login.html")
 
 
 def logout_view(request):
     logout(request)
-    return redirect("/login/")
+    return redirect("login")
 
+
+# =======================
+# CAIXA
+# =======================
 
 @login_required
 def area_caixa(request):
-    total = Venda.objects.filter(
-        data__date=now().date()
-    ).aggregate(t=Sum("total"))["t"] or 0
+    return render(request, "caixa.html")
 
-    return render(request, "farmacia/caixa.html", {"total": total})
 
+# =======================
+# NOVA VENDA
+# =======================
 
 @login_required
 def nova_venda(request):
     produtos = Produto.objects.all()
-    return render(request, "farmacia/nova_venda.html", {"produtos": produtos})
 
+    if request.method == "POST":
+        produto_id = request.POST.get("produto")
+        quantidade = int(request.POST.get("quantidade"))
+
+        carrinho = request.session.get("carrinho", {})
+
+        if produto_id in carrinho:
+            carrinho[produto_id] += quantidade
+        else:
+            carrinho[produto_id] = quantidade
+
+        request.session["carrinho"] = carrinho
+        return redirect("nova_venda")
+
+    carrinho = request.session.get("carrinho", {})
+    itens = []
+    total = 0
+
+    for pid, qtd in carrinho.items():
+        produto = Produto.objects.get(id=pid)
+        subtotal = produto.preco * qtd
+        total += subtotal
+        itens.append({
+            "produto": produto,
+            "quantidade": qtd,
+            "subtotal": subtotal
+        })
+
+    return render(request, "nova_venda.html", {
+        "produtos": produtos,
+        "itens": itens,
+        "total": total
+    })
+
+
+# =======================
+# FINALIZAR VENDA
+# =======================
 
 @login_required
 def finalizar_venda(request):
-    if request.method == "POST":
-        venda = Venda.objects.create(
-            operador=request.user,
-            pagamento=request.POST.get("pagamento"),
-            total=0
+    carrinho = request.session.get("carrinho", {})
+
+    if not carrinho:
+        return redirect("nova_venda")
+
+    venda = Venda.objects.create(data=now(), total=0)
+
+    total = 0
+    for pid, qtd in carrinho.items():
+        produto = Produto.objects.get(id=pid)
+        subtotal = produto.preco * qtd
+
+        ItemVenda.objects.create(
+            venda=venda,
+            produto=produto,
+            quantidade=qtd,
+            preco=produto.preco
         )
 
-        total = 0
+        produto.stock -= qtd
+        produto.save()
 
-        for produto_id in request.POST.getlist("produto"):
-            qtd = int(request.POST.get(f"qtd_{produto_id}", 1))
-            produto = Produto.objects.get(id=produto_id)
+        total += subtotal
 
-            ItemVenda.objects.create(
-                venda=venda,
-                produto=produto,
-                quantidade=qtd,
-                preco=produto.preco
-            )
+    venda.total = total
+    venda.save()
 
-            total += produto.preco * qtd
+    request.session["carrinho"] = {}
 
-        venda.total = total
-        venda.save()
+    return redirect("emitir_recibo", venda_id=venda.id)
 
-        return redirect(f"/emitir-recibo/?venda={venda.id}")
 
-    return redirect("/caixa/")
-
+# =======================
+# HISTÓRICO DE VENDAS
+# =======================
 
 @login_required
 def historico_vendas(request):
-    vendas = Venda.objects.order_by("-data")
+    vendas = Venda.objects.all().order_by("-data")
     return render(request, "historico_vendas.html", {"vendas": vendas})
 
 
+# =======================
+# EMITIR RECIBO
+# =======================
+
 @login_required
-def emitir_recibo(request):
-    venda_id = request.GET.get("venda")
-    venda = Venda.objects.get(id=venda_id)
+def emitir_recibo(request, venda_id):
+    venda = get_object_or_404(Venda, id=venda_id)
     itens = ItemVenda.objects.filter(venda=venda)
 
-   return render(request, "emitir_recibo.html", {
-    "venda": venda,
-    "itens": itens
-})
+    return render(request, "emitir_recibo.html", {
+        "venda": venda,
+        "itens": itens
+    })
