@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Produto(models.Model):
     nome = models.CharField(max_length=200)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.IntegerField()
+    stock = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nome
@@ -14,15 +14,11 @@ class Produto(models.Model):
 class Venda(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now_add=True)
+    forma_pagamento = models.CharField(max_length=50)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    finalizada = models.BooleanField(default=False)
 
-    def calcular_total(self):
-        total = 0
-        for item in self.itens.all():
-            total += item.subtotal()
-        self.total = total
-        self.save()
+    def __str__(self):
+        return f"Venda #{self.id}"
 
 
 class ItemVenda(models.Model):
