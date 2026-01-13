@@ -1,1 +1,19 @@
-ALDO
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recibo</title>
+</head>
+<body>
+
+<h1>Recibo</h1>
+
+<p>Data: {{ venda.data }}</p>
+<p>Total: {{ venda.total }} MZN</p>
+<p>Pagamento: {{ venda.pagamento }}</p>
+
+<button onclick="window.print()">Imprimir</button>
+
+<a href="/caixa/">Voltar</a>
+
+</body>
+</html>
