@@ -1,0 +1,33 @@
+{% extends "farmacia/base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Nova Venda</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Produto:</label><br>
+        <select name="produto_id">
+            {% for p in produtos %}
+            <option value="{{ p.id }}">{{ p.nome }} - {{ p.preco }} MZN ({{ p.stock }})</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label>Quantidade:</label><br>
+        <input type="number" name="quantidade" required><br><br>
+
+        <label>Forma de Pagamento:</label><br>
+        <select name="pagamento">
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="M-Pesa">M-Pesa</option>
+            <option value="POS">POS</option>
+        </select><br><br>
+
+        <button class="button success" type="submit">Finalizar Venda</button>
+    </form>
+
+</div>
+
+{% endblock %}
