@@ -8,8 +8,6 @@ class FarmaciaConfig(AppConfig):
     def ready(self):
         try:
             with connection.cursor() as cursor:
-                cursor.execute("""
-                    DROP TABLE IF EXISTS farmacia_venda CASCADE;
-                """)
+                cursor.execute("DROP TABLE IF EXISTS farmacia_venda CASCADE;")
         except:
             pass
