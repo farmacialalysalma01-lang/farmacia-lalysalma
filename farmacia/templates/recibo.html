@@ -1,79 +1,43 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Recibo - ALGIK</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f9;
-}
-
-.recibo {
-    background: white;
-    width: 350px;
-    margin: 30px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-}
-
-h2 {
-    text-align: center;
-}
-
-.linha {
-    display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
-}
-
-.total {
-    font-size: 18px;
-    font-weight: bold;
-    border-top: 1px dashed black;
-    margin-top: 10px;
-    padding-top: 10px;
-}
-
-.btn {
-    display: block;
-    text-align: center;
-    padding: 12px;
-    margin-top: 15px;
-    background: #0d6efd;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.print {
-    background: #198754;
-}
-</style>
+    <title>Recibo</title>
+    <style>
+        body { font-family: Arial; padding:20px; }
+        table { width:100%; border-collapse: collapse; margin-top:20px; }
+        th, td { padding:10px; border:1px solid #000; }
+        th { background:#eee; }
+        h2 { text-align:center; }
+        button { padding:10px 20px; background:#0d6efd; color:white; border:none; border-radius:6px; }
+    </style>
 </head>
-
 <body>
 
-<div class="recibo">
-    <h2>ALGIK</h2>
-    <p style="text-align:center">Recibo de Venda</p>
+<h2>RECIBO DE VENDA</h2>
 
-    {% if venda %}
-        <div class="linha"><span>Produto:</span><span>{{ venda.produto.nome }}</span></div>
-        <div class="linha"><span>Quantidade:</span><span>{{ venda.quantidade }}</span></div>
-        <div class="linha"><span>Preço:</span><span>{{ venda.preco_unitario }} MZN</span></div>
-        <div class="linha total"><span>Total:</span><span>{{ venda.total }} MZN</span></div>
-        <hr>
-        <div class="linha"><span>Operador:</span><span>{{ venda.operador.username }}</span></div>
-        <div class="linha"><span>Data:</span><span>{{ venda.data }}</span></div>
-    {% else %}
-        <p>Nenhuma venda encontrada.</p>
-    {% endif %}
+<p><strong>Data:</strong> {{ venda.data }}</p>
+<p><strong>Total:</strong> {{ venda.total }} MZN</p>
 
-    <a href="#" class="btn print" onclick="window.print()">🖨️ Imprimir</a>
-    <a href="/caixa/" class="btn">⬅ Voltar</a>
-</div>
+<table>
+<tr>
+    <th>Produto</th>
+    <th>Qtd</th>
+    <th>Preço</th>
+</tr>
+
+{% for item in itens %}
+<tr>
+    <td>{{ item.produto.nome }}</td>
+    <td>{{ item.quantidade }}</td>
+    <td>{{ item.preco }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<button onclick="window.print()">🖨 Imprimir</button>
+<br><br>
+<a href="/caixa/">⬅ Voltar ao Caixa</a>
 
 </body>
 </html>
