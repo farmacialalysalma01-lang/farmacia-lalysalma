@@ -75,7 +75,7 @@ def finalizar_venda(request):
 @login_required
 def historico_vendas(request):
     vendas = Venda.objects.order_by("-data")
-    return render(request, "farmacia/historico_vendas.html", {"vendas": vendas})
+    return render(request, "historico_vendas.html", {"vendas": vendas})
 
 
 @login_required
@@ -84,7 +84,7 @@ def emitir_recibo(request):
     venda = Venda.objects.get(id=venda_id)
     itens = ItemVenda.objects.filter(venda=venda)
 
-    return render(request, "farmacia/emitir_recibo.html", {
-        "venda": venda,
-        "itens": itens
-    })
+   return render(request, "emitir_recibo.html", {
+    "venda": venda,
+    "itens": itens
+})
