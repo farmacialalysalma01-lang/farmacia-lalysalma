@@ -1,1 +1,30 @@
-OK
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Histórico</title>
+</head>
+<body>
+
+<h1>Histórico de Vendas</h1>
+
+<table border="1">
+<tr>
+    <th>Data</th>
+    <th>Total</th>
+    <th>Pagamento</th>
+</tr>
+
+{% for v in vendas %}
+<tr>
+    <td>{{ v.data }}</td>
+    <td>{{ v.total }}</td>
+    <td>{{ v.pagamento }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<a href="/caixa/">Voltar</a>
+
+</body>
+</html>
