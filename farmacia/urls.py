@@ -1,14 +1,10 @@
 from django.urls import path
-from . import views
+from .views import area_caixa, nova_venda, finalizar_venda, historico_vendas, emitir_recibo
 
 urlpatterns = [
-    path("", views.login_view, name="login"),
-    path("login/", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout"),
-
-    path("caixa/", views.area_caixa, name="caixa"),
-    path("nova-venda/", views.nova_venda, name="nova_venda"),
-    path("finalizar-venda/", views.finalizar_venda, name="finalizar_venda"),
-    path("historico-vendas/", views.historico_vendas, name="historico_vendas"),
-    path("emitir-recibo/", views.emitir_recibo, name="emitir_recibo"),
+    path("caixa/", area_caixa),
+    path("nova-venda/", nova_venda),
+    path("finalizar-venda/", finalizar_venda),
+    path("historico-vendas/", historico_vendas),
+    path("emitir-recibo/", emitir_recibo),
 ]
