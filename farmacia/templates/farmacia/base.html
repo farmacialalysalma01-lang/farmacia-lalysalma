@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>ALGIK</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f4f6f8;
+        }
+        header {
+            background: #0d6efd;
+            color: white;
+            padding: 15px;
+            font-size: 20px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,.1);
+        }
+        a.button {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #0d6efd;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-right: 10px;
+        }
+        .danger {
+            background: #dc3545;
+        }
+        .success {
+            background: #198754;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    ALGIK – Sistema de Farmácia
+</header>
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+</html>
