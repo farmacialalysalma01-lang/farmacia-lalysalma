@@ -1,3 +1,24 @@
-<h2>Emitir Recibo</h2>
-<p>Impressão de recibos.</p>
-<a href="/caixa/">Voltar</a>
+<h2>Recibo</h2>
+
+<p>Data: {{ venda.data }}</p>
+<p>Total: {{ venda.total }} MZN</p>
+
+<table border="1">
+<tr>
+    <th>Produto</th>
+    <th>Qtd</th>
+    <th>Preço</th>
+</tr>
+
+{% for i in itens %}
+<tr>
+    <td>{{ i.produto.nome }}</td>
+    <td>{{ i.quantidade }}</td>
+    <td>{{ i.preco }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<button onclick="window.print()">Imprimir</button>
+<br><br>
+<a href="/caixa/">Voltar ao Caixa</a>
