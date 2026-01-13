@@ -1,16 +1,21 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from .models import Produto, Venda, ItemVenda
+from django.contrib.auth import authenticate, login, logout
+from django.utils.timezone import now
 
+from .models import Produto, Venda
+
+
+# =========================
+# LOGIN
+# =========================
 
 def login_view(request):
     if request.method == "POST":
         user = authenticate(
             request,
-            username=request.POST["username"],
-            password=request.POST["password"]
+            username=request.POST.get("username"),
+            password=request.POST.get("password"),
         )
         if user:
             login(request, user)
@@ -20,78 +25,60 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("/")
+    return redirect("/login/")
 
+
+# =========================
+# CAIXA
+# =========================
 
 @login_required
 def area_caixa(request):
-    total = Venda.objects.all().aggregate(models.Sum("total"))["total__sum"] or 0
-    return render(request, "caixa.html", {"total": total})
+    total_hoje = (
+        Venda.objects.filter(data__date=now().date())
+        .aggregate(total=models.Sum("total"))
+        .get("total")
+        or 0
+    )
 
+    return render(request, "caixa.html", {
+        "total_hoje": total_hoje
+    })
+
+
+# =========================
+# NOVA VENDA
+# =========================
 
 @login_required
 def nova_venda(request):
     produtos = Produto.objects.all()
-    carrinho = request.session.get("carrinho", [])
+    return render(request, "nova_venda.html", {"produtos": produtos})
 
+
+# =========================
+# FINALIZAR VENDA
+# =========================
+
+@login_required
+def finalizar_venda(request):
     if request.method == "POST":
         produto_id = request.POST.get("produto")
         qtd = int(request.POST.get("quantidade", 1))
-        carrinho.append({"produto": produto_id, "quantidade": qtd})
-        request.session["carrinho"] = carrinho
-        return redirect("/nova-venda/")
 
-    return render(request, "nova_venda.html", {
-        "produtos": produtos,
-        "carrinho": carrinho
-    })
+        produto = Produto.objects.get(id=produto_id)
+        total = produto.preco * qtd
 
-
-@login_required
-@transaction.atomic
-def finalizar_venda(request):
-    carrinho = request.session.get("carrinho", [])
-
-    if not carrinho:
-        return redirect("/nova-venda/")
-
-    venda = Venda.objects.create(usuario=request.user, total=0)
-    total = 0
-
-    for item in carrinho:
-        produto = Produto.objects.get(id=item["produto"])
-        qtd = item["quantidade"]
-
-        if produto.stock < qtd:
-            raise Exception("Stock insuficiente")
+        Venda.objects.create(
+            produto=produto,
+            quantidade=qtd,
+            total=total,
+            data=now()
+        )
 
         produto.stock -= qtd
         produto.save()
 
-        ItemVenda.objects.create(
-            venda=venda,
-            produto=produto,
-            quantidade=qtd,
-            preco=produto.preco
-        )
+        return redirect("/caixa/")
 
-        total += produto.preco * qtd
-
-    venda.total = total
-    venda.save()
-
-    request.session["carrinho"] = []
-
-    return redirect("/emitir-recibo/")
-
-
-@login_required
-def historico_vendas(request):
-    vendas = Venda.objects.all().order_by("-data")
-    return render(request, "historico.html", {"vendas": vendas})
-
-
-@login_required
-def emitir_recibo(request):
-    venda = Venda.objects.last()
-    return render(request, "recibo.html", {"venda": venda})
+    return redirect("/caixa/")
