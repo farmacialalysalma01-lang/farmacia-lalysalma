@@ -2,37 +2,26 @@
 <html>
 <head>
     <title>Histórico de Vendas</title>
-    <style>
-        body { font-family: Arial; background:#f5f5f5; padding:20px; }
-        table { width:100%; border-collapse: collapse; background:white; }
-        th, td { padding:10px; border-bottom:1px solid #ddd; text-align:left; }
-        th { background:#0d6efd; color:white; }
-        h2 { margin-bottom:20px; }
-        a { text-decoration:none; color:white; background:#198754; padding:10px 20px; border-radius:6px; }
-    </style>
 </head>
 <body>
+    <h2>Histórico de Vendas</h2>
 
-<h2>Histórico de Vendas</h2>
+    <table border="1">
+        <tr>
+            <th>Data</th>
+            <th>Total</th>
+            <th>Pagamento</th>
+        </tr>
 
-<table>
-<tr>
-    <th>Data</th>
-    <th>Total</th>
-</tr>
+        {% for v in vendas %}
+        <tr>
+            <td>{{ v.data }}</td>
+            <td>{{ v.total }} MZN</td>
+            <td>{{ v.pagamento }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-{% for venda in vendas %}
-<tr>
-    <td>{{ venda.data }}</td>
-    <td>{{ venda.total }} MZN</td>
-</tr>
-{% empty %}
-<tr><td colspan="2">Nenhuma venda registada</td></tr>
-{% endfor %}
-</table>
-
-<br>
-<a href="/caixa/">⬅ Voltar ao Caixa</a>
-
+    <a href="/caixa/">⬅ Voltar</a>
 </body>
 </html>
